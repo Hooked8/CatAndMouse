@@ -167,6 +167,26 @@
   backdrop-filter: blur(6px);
 }
 
+.viewer-fallback {
+  display: grid;
+  place-items: center;
+  min-height: min(40vh, 360px);
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.viewer-toggles {
+  margin-top: 0.65rem;
+}
+
+.btn-small {
+  padding: 0.55rem 0.85rem;
+  font-size: 0.82rem;
+}
+
 .eyebrow {
   margin: 0 0 0.65rem;
   font-family: var(--font-mono);

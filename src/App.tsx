@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { ErrorBoundary } from './components/ErrorBoundary'
 import { FigureViewer } from './components/FigureViewer'
 import {
   archetypeTitle,
@@ -16,38 +17,70 @@ export default function App() {
   const [history, setHistory] = useState<DesignSpec[]>([])
   const [flash, setFlash] = useState(false)
   const [genCount, setGenCount] = useState(1)
-  const [status, setStatus] = useState('')
-  const [busy, setBusy] = useState(false)
+  const [status, setStatus] = useState('Ready — tap Generate anytime')
+  // Start with 3D off so Generate/Download always respond; user can enable preview.
+  const [show3d, setShow3d] = useState(false)
 
-  const regenerate = useCallback(() => {
-    if (busy) return
-    setBusy(true)
-    setFlash(true)
-    setStatus('Forging a new figure…')
-    const prev = design
-    const next = generateDesign(freshSeed())
-    setHistory((h) => [prev, ...h].slice(0, HISTORY_MAX))
-    setDesign(next)
-    setGenCount((n) => n + 1)
-    setStatus(`Ready: ${next.name}`)
-    window.setTimeout(() => setBusy(false), 250)
-  }, [busy, design])
+  const designRef = useRef(design)
+  const genBtnRef = useRef<HTMLButtonElement>(null)
+  const dlBtnRef = useRef<HTMLButtonElement>(null)
+  designRef.current = design
+
+  useEffect(() => {
+    const genBtn = genBtnRef.current
+    const dlBtn = dlBtnRef.current
+    if (!genBtn || !dlBtn) return
+
+    const onGenerate = (event: Event) => {
+      event.preventDefault()
+      event.stopPropagation()
+      const prev = designRef.current
+      const next = generateDesign(freshSeed())
+      setFlash(true)
+      setHistory((h) => [prev, ...h].slice(0, HISTORY_MAX))
+      setDesign(next)
+      setGenCount((n) => n + 1)
+      setStatus(`New design: ${next.name}`)
+      // Direct DOM feedback even if React paint stalls
+      const live = document.getElementById('live-status')
+      if (live) live.textContent = `New design: ${next.name}`
+      const title = document.getElementById('design-title')
+      if (title) title.textContent = next.name
+      const count = document.getElementById('design-count')
+      if (count) count.textContent = String(Number(count.textContent || '0') + 1).padStart(3, '0')
+    }
+
+    const onDownload = (event: Event) => {
+      event.preventDefault()
+      event.stopPropagation()
+      const current = designRef.current
+      setStatus(`Building STL for ${current.name}…`)
+      try {
+        downloadStl(current)
+        setStatus(`Downloaded ${current.name}.stl`)
+        const live = document.getElementById('live-status')
+        if (live) live.textContent = `Downloaded ${current.name}.stl`
+      } catch (err) {
+        console.error(err)
+        setStatus('STL failed — generate again and retry')
+        window.alert('Could not build STL. Tap Generate, then try Download again.')
+      }
+    }
+
+    genBtn.addEventListener('click', onGenerate)
+    dlBtn.addEventListener('click', onDownload)
+
+    return () => {
+      genBtn.removeEventListener('click', onGenerate)
+      dlBtn.removeEventListener('click', onDownload)
+    }
+  }, [])
 
   useEffect(() => {
     if (!flash) return
     const t = window.setTimeout(() => setFlash(false), 420)
     return () => window.clearTimeout(t)
   }, [flash, design.id])
-
-  const onDownload = useCallback(() => {
-    setStatus('Building STL…')
-    try {
-      downloadStl(design)
-      setStatus(`Downloaded ${design.name}.stl`)
-    } catch {
-      setStatus('STL failed — try Generate again')
-    }
-  }, [design])
 
   const restore = (item: DesignSpec) => {
     setHistory((h) => [design, ...h.filter((d) => d.id !== item.id)].slice(0, HISTORY_MAX))
@@ -67,50 +100,49 @@ export default function App() {
           </div>
         </div>
         <p className="gen-meter">
-          Design <span>{String(genCount).padStart(3, '0')}</span>
+          Design <span id="design-count">{String(genCount).padStart(3, '0')}</span>
         </p>
       </header>
 
       <section className="control-deck">
         <div className="control-copy">
           <p className="eyebrow">{archetypeTitle(design.archetype)}</p>
-          <h1 key={design.id} className="title">
+          <h1 key={design.id} className="title" id="design-title">
             {design.name}
           </h1>
           <p className="tagline">{design.tagline}</p>
         </div>
 
         <div className="cta-row">
-          <button
-            type="button"
-            className={`btn btn-primary ${busy ? 'is-busy' : ''}`}
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              regenerate()
-            }}
-          >
-            {busy ? 'Forging…' : 'Generate new design'}
+          <button ref={genBtnRef} id="btn-generate" type="button" className="btn btn-primary">
+            Generate new design
           </button>
-          <button
-            type="button"
-            className="btn btn-ghost"
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              onDownload()
-            }}
-          >
+          <button ref={dlBtnRef} id="btn-download" type="button" className="btn btn-ghost">
             Download STL
           </button>
         </div>
-        {status ? <p className="status-line" role="status">{status}</p> : null}
+        <p className="status-line" id="live-status" role="status">
+          {status}
+        </p>
+        <div className="viewer-toggles">
+          <button type="button" className="btn btn-ghost btn-small" onClick={() => setShow3d((v) => !v)}>
+            {show3d ? 'Hide 3D preview' : 'Show 3D preview'}
+          </button>
+        </div>
       </section>
 
       <main className="stage">
-        <section className={`hero-visual ${flash ? 'is-regen' : ''}`}>
-          <FigureViewer spec={design} />
-        </section>
+        {show3d ? (
+          <section className={`hero-visual ${flash ? 'is-regen' : ''}`}>
+            <ErrorBoundary>
+              <FigureViewer spec={design} />
+            </ErrorBoundary>
+          </section>
+        ) : (
+          <section className="hero-visual viewer-fallback">
+            <p>3D preview hidden — Generate and Download still work.</p>
+          </section>
+        )}
 
         <section className="hero-meta">
           <dl className="meta">
