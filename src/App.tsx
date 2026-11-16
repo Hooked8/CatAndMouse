@@ -2,7 +2,6 @@ import { useCallback, useState } from 'react'
 import { CryptexViewer } from './components/CryptexViewer'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { LOCK_CODE_LABEL, cryptexPrintNotes } from './lib/cryptex'
-import { downloadCryptexStl } from './lib/stl'
 import './App.css'
 
 export default function App() {
@@ -10,21 +9,15 @@ export default function App() {
   const [show3d, setShow3d] = useState(true)
 
   const onDownload = useCallback(() => {
-    setStatus('Building STL…')
-    try {
-      downloadCryptexStl()
-      setStatus(`Downloaded pulseform-cryptex-${LOCK_CODE_LABEL}.stl`)
-    } catch (err) {
-      console.error(err)
-      // Fallback to prebuilt public file
-      const a = document.createElement('a')
-      a.href = `/pulseform-cryptex-${LOCK_CODE_LABEL}.stl`
-      a.download = `pulseform-cryptex-${LOCK_CODE_LABEL}.stl`
-      document.body.appendChild(a)
-      a.click()
-      a.remove()
-      setStatus('Downloaded prebuilt STL')
-    }
+    setStatus('Downloading STL…')
+    // Prefer prebuilt printable file (clearance-aware solids)
+    const a = document.createElement('a')
+    a.href = `/pulseform-cryptex-${LOCK_CODE_LABEL}.stl`
+    a.download = `pulseform-cryptex-${LOCK_CODE_LABEL}.stl`
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    setStatus(`Downloaded pulseform-cryptex-${LOCK_CODE_LABEL}.stl`)
   }, [])
 
   return (
