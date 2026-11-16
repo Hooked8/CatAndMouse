@@ -1,0 +1,26 @@
+import { chromium } from 'playwright-core'
+import fs from 'fs'
+const browser = await chromium.launch({ headless: true })
+const page = await browser.newPage({ viewport: { width: 1600, height: 1000 } })
+page.on('pageerror', e => console.log('pageerror', e.message))
+page.on('console', m => { if (m.type()==='error') console.log('console', m.text()) })
+await page.goto('http://127.0.0.1:8765/buildplate-multipart.html', { waitUntil: 'networkidle', timeout: 180000 })
+await page.waitForFunction(() => window.__READY === true || window.__ERROR, { timeout: 180000 })
+const meta = await page.evaluate(() => ({ err: window.__ERROR || null, size: window.__SIZE || null }))
+console.log(meta)
+if (meta.err) throw new Error(meta.err)
+await page.waitForTimeout(1200)
+const out = '/agent/pulseform/public/cryptex-6767-multipart-plate.png'
+await page.screenshot({ path: out, type: 'png' })
+console.log('wrote', out, fs.statSync(out).size)
+const canvas = page.locator('canvas')
+const box = await canvas.boundingBox()
+await page.mouse.move(box.x + box.width * 0.55, box.y + box.height * 0.35)
+await page.mouse.down()
+await page.mouse.move(box.x + box.width * 0.55, box.y + box.height * 0.55, { steps: 20 })
+await page.mouse.up()
+await page.waitForTimeout(400)
+const out2 = '/agent/pulseform/public/cryptex-6767-multipart-plate-angle.png'
+await page.screenshot({ path: out2, type: 'png' })
+console.log('wrote', out2, fs.statSync(out2).size)
+await browser.close()

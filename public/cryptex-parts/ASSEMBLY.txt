@@ -1,0 +1,42 @@
+Pulseform Cryptex Vault — Multi-part kit (code 6767)
+=====================================================
+
+PRINT
+- File: pulseform-cryptex-6767-PLATE.stl  (all parts on one plate)
+- Or print individuals from /cryptex-parts/
+- 0.16–0.2mm layers, 3–4 walls, 15–25% gyroid, no supports needed for these orientations
+- Material: PLA+ or PETG. Keep dimensional accuracy — don't scale.
+
+FITS (engineered)
+- Vault OD 35.30 mm into dial ID 36.0 mm → radial clearance 0.35 mm
+- Dial width 11 mm in housing grooves with 0.4 mm axial play
+- Gate window 28° at each unlock digit; dog height 2.8 mm
+
+ASSEMBLY (order matters)
+1. Slide the 4 dials into the housing from the REAR, in order rear→nose:
+   dial-6, dial-7, dial-6, dial-7 (files 03→06). Seat each in its groove.
+   Tall tick on each dial = that dial's unlock digit.
+2. Insert vault-slider from the REAR through the dials until dogs sit under dials.
+3. Snap retention-clip onto the vault rear stem (prevents full pull-out later).
+4. Press rear-cap into the housing rear (friction fit; CA optional).
+5. Press nose-grip onto the vault front tenon.
+6. Test: align all tall ticks to the housing witness ridge → 6·7·6·7 → pull nose.
+   Wrong code = a dog hits a dial pad and the vault will not slide.
+
+UNLOCK
+- Align each dial's TALL tick to the housing witness mark.
+- Order rear → nose: 6 · 7 · 6 · 7
+- Pull nose grip; vault slides out revealing stash cavity (~20 mm Ø × 48 mm).
+
+PARTS LIST
+- 01-housing.stl  (52.0×55.0 mm footprint, 78.0 mm tall)
+- 02-rear-cap.stl  (52.0×52.0 mm footprint, 10.7 mm tall)
+- 03-dial-6-rear.stl  (54.3×54.3 mm footprint, 11.0 mm tall)
+- 04-dial-7.stl  (54.3×54.3 mm footprint, 11.0 mm tall)
+- 05-dial-6.stl  (54.3×54.3 mm footprint, 11.0 mm tall)
+- 06-dial-7-nose.stl  (54.3×54.3 mm footprint, 11.0 mm tall)
+- 07-vault-slider.stl  (38.5×35.3 mm footprint, 84.0 mm tall)
+- 08-nose-grip.stl  (49.6×49.6 mm footprint, 15.3 mm tall)
+- 09-retention-clip.stl  (47.3×39.3 mm footprint, 4.0 mm tall)
+
+Plate STL bytes: 4264807

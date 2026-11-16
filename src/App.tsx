@@ -1,23 +1,28 @@
 import { useCallback, useState } from 'react'
-import { CryptexViewer } from './components/CryptexViewer'
-import { ErrorBoundary } from './components/ErrorBoundary'
-import { LOCK_CODE_LABEL, cryptexPrintNotes } from './lib/cryptex'
+import { LOCK_CODE_LABEL } from './lib/cryptex'
 import './App.css'
 
-export default function App() {
-  const [status, setStatus] = useState(`Code locked to ${LOCK_CODE_LABEL} — download the printable STL`)
-  const [show3d, setShow3d] = useState(true)
+function downloadFile(href: string, filename: string) {
+  const a = document.createElement('a')
+  a.href = href
+  a.download = filename
+  a.rel = 'noopener'
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+}
 
-  const onDownload = useCallback(() => {
-    setStatus('Downloading STL…')
-    // Prefer prebuilt printable file (clearance-aware solids)
-    const a = document.createElement('a')
-    a.href = `/pulseform-cryptex-${LOCK_CODE_LABEL}.stl`
-    a.download = `pulseform-cryptex-${LOCK_CODE_LABEL}.stl`
-    document.body.appendChild(a)
-    a.click()
-    a.remove()
-    setStatus(`Downloaded pulseform-cryptex-${LOCK_CODE_LABEL}.stl`)
+export default function App() {
+  const [status, setStatus] = useState('2 print plates ready — download both STLs')
+
+  const dl1 = useCallback(() => {
+    downloadFile('/plate-1-housing-vault.stl', 'plate-1-housing-vault.stl')
+    setStatus('Downloaded Plate 1 — Housing + Vault')
+  }, [])
+
+  const dl2 = useCallback(() => {
+    downloadFile('/plate-2-dials-caps.stl', 'plate-2-dials-caps.stl')
+    setStatus('Downloaded Plate 2 — Dials + caps + clip')
   }, [])
 
   return (
@@ -28,7 +33,7 @@ export default function App() {
           <span className="brand-mark" aria-hidden />
           <div>
             <p className="brand-name">Pulseform</p>
-            <p className="brand-sub">Printable lock vault</p>
+            <p className="brand-sub">Cryptex vault kit</p>
           </div>
         </div>
         <p className="gen-meter">
@@ -38,76 +43,62 @@ export default function App() {
 
       <section className="control-deck">
         <div className="control-copy">
-          <p className="eyebrow">One-print cylinder lock</p>
+          <p className="eyebrow">Multi-part print · 2 plates</p>
           <h1 className="title">Cryptex Vault {LOCK_CODE_LABEL}</h1>
           <p className="tagline">
-            Bike-lock style sliding cylinder with four moving dials. Only code {LOCK_CODE_LABEL} lines up the
-            internal gates so the vault nose slides open — stash cavity inside for a key, USB, note, or ring.
+            9 engineered parts across two build plates. Sliding vault with stash cavity — opens only on code{' '}
+            {LOCK_CODE_LABEL}.
           </p>
         </div>
-
-        <div className="cta-row">
-          <button type="button" className="btn btn-primary" id="btn-download" onClick={onDownload}>
-            Download STL
-          </button>
-          <button type="button" className="btn btn-ghost" onClick={() => setShow3d((v) => !v)}>
-            {show3d ? 'Hide 3D preview' : 'Show 3D preview'}
-          </button>
-        </div>
-        <p className="status-line" id="live-status" role="status">
+        <p className="status-line" role="status">
           {status}
         </p>
       </section>
 
-      <main className="stage">
-        {show3d ? (
-          <section className="hero-visual">
-            <ErrorBoundary>
-              <CryptexViewer />
-            </ErrorBoundary>
-          </section>
-        ) : (
-          <section className="hero-visual viewer-fallback">
-            <p>3D preview hidden — STL download still works.</p>
-          </section>
-        )}
+      <main className="plate-grid">
+        <article className="plate-card">
+          <img src="/plate-1-housing-vault.png" alt="Build plate 1 — housing and vault" />
+          <div className="plate-card-body">
+            <p className="plate-kicker">Plate 1 of 2</p>
+            <h2>Housing + Vault</h2>
+            <p>2 tall parts: outer housing tube and sliding vault with lock dogs + stash cavity.</p>
+            <button type="button" className="btn btn-primary" onClick={dl1}>
+              Download Plate 1 STL
+            </button>
+          </div>
+        </article>
 
-        <section className="hero-meta">
-          <dl className="meta">
-            <div>
-              <dt>How it opens</dt>
-              <dd>
-                Spin each dial so the amber tick faces the amber witness ridge on the housing. Sequence from rear
-                to nose: <strong>6 · 7 · 6 · 7</strong>. Pull the light grip — the vault slides out.
-              </dd>
-            </div>
-            <div>
-              <dt>Inside</dt>
-              <dd>
-                Cylindrical stash pocket ~22mm diameter × 42mm deep. One-print moving dials + sliding vault with
-                ~0.4mm FDM clearance.
-              </dd>
-            </div>
-            <div>
-              <dt>Print</dt>
-              <dd>{cryptexPrintNotes()}</dd>
-            </div>
-            <div>
-              <dt>Sell idea</dt>
-              <dd>
-                Gift-shop puzzle vaults, proposal ring boxes, USB dead-drops, escape-room props. Unpainted $22–$35 ·
-                painted $45–$70.
-              </dd>
-            </div>
-          </dl>
-        </section>
+        <article className="plate-card">
+          <img src="/plate-2-dials-caps.png" alt="Build plate 2 — dials and caps" />
+          <div className="plate-card-body">
+            <p className="plate-kicker">Plate 2 of 2</p>
+            <h2>Dials + Caps + Clip</h2>
+            <p>7 parts: four code dials (6·7·6·7), rear cap, nose grip, retention clip.</p>
+            <button type="button" className="btn btn-primary" onClick={dl2}>
+              Download Plate 2 STL
+            </button>
+          </div>
+        </article>
       </main>
 
+      <section className="hero-meta wrap-meta">
+        <dl className="meta">
+          <div>
+            <dt>Unlock</dt>
+            <dd>
+              After assembly, align each dial’s tall tick to the witness mark — rear→nose <strong>6 · 7 · 6 · 7</strong>{' '}
+              — then pull the nose to slide the vault open.
+            </dd>
+          </div>
+          <div>
+            <dt>Print</dt>
+            <dd>0.16–0.2mm layers, 3–4 walls, 15–25% gyroid. Do not scale. PLA+ or PETG.</dd>
+          </div>
+        </dl>
+      </section>
+
       <footer className="foot">
-        <p>
-          Pulseform Cryptex Vault — original generative printable lock. Correct combination factory-set to{' '}
-          {LOCK_CODE_LABEL}. Free the dials gently after printing before first unlock.
-        </p>
+        <p>Pulseform Cryptex Vault — multi-part kit. Code factory-set to {LOCK_CODE_LABEL}.</p>
       </footer>
     </div>
   )
