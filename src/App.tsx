@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, useTransition } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { FigureViewer } from './components/FigureViewer'
 import {
   archetypeTitle,
@@ -14,19 +14,24 @@ const HISTORY_MAX = 12
 export default function App() {
   const [design, setDesign] = useState<DesignSpec>(() => generateDesign(freshSeed()))
   const [history, setHistory] = useState<DesignSpec[]>([])
-  const [isPending, startTransition] = useTransition()
   const [flash, setFlash] = useState(false)
   const [genCount, setGenCount] = useState(1)
+  const [status, setStatus] = useState('')
+  const [busy, setBusy] = useState(false)
 
   const regenerate = useCallback(() => {
+    if (busy) return
+    setBusy(true)
     setFlash(true)
+    setStatus('Forging a new figure…')
+    const prev = design
     const next = generateDesign(freshSeed())
-    startTransition(() => {
-      setHistory((h) => [design, ...h].slice(0, HISTORY_MAX))
-      setDesign(next)
-      setGenCount((n) => n + 1)
-    })
-  }, [design])
+    setHistory((h) => [prev, ...h].slice(0, HISTORY_MAX))
+    setDesign(next)
+    setGenCount((n) => n + 1)
+    setStatus(`Ready: ${next.name}`)
+    window.setTimeout(() => setBusy(false), 250)
+  }, [busy, design])
 
   useEffect(() => {
     if (!flash) return
@@ -34,11 +39,20 @@ export default function App() {
     return () => window.clearTimeout(t)
   }, [flash, design.id])
 
+  const onDownload = useCallback(() => {
+    setStatus('Building STL…')
+    try {
+      downloadStl(design)
+      setStatus(`Downloaded ${design.name}.stl`)
+    } catch {
+      setStatus('STL failed — try Generate again')
+    }
+  }, [design])
+
   const restore = (item: DesignSpec) => {
-    startTransition(() => {
-      setHistory((h) => [design, ...h.filter((d) => d.id !== item.id)].slice(0, HISTORY_MAX))
-      setDesign(item)
-    })
+    setHistory((h) => [design, ...h.filter((d) => d.id !== item.id)].slice(0, HISTORY_MAX))
+    setDesign(item)
+    setStatus(`Restored ${item.name}`)
   }
 
   return (
@@ -57,32 +71,48 @@ export default function App() {
         </p>
       </header>
 
-      <main className="stage">
-        <section className={`hero-visual ${flash ? 'is-regen' : ''}`}>
-          <FigureViewer spec={design} />
-        </section>
-
-        <section className="hero-copy">
+      <section className="control-deck">
+        <div className="control-copy">
           <p className="eyebrow">{archetypeTitle(design.archetype)}</p>
           <h1 key={design.id} className="title">
             {design.name}
           </h1>
           <p className="tagline">{design.tagline}</p>
+        </div>
 
-          <div className="cta-row">
-            <button
-              type="button"
-              className={`btn btn-primary ${isPending ? 'is-busy' : ''}`}
-              onClick={regenerate}
-              disabled={isPending}
-            >
-              {isPending ? 'Forging…' : 'Generate new design'}
-            </button>
-            <button type="button" className="btn btn-ghost" onClick={() => downloadStl(design)}>
-              Download STL
-            </button>
-          </div>
+        <div className="cta-row">
+          <button
+            type="button"
+            className={`btn btn-primary ${busy ? 'is-busy' : ''}`}
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              regenerate()
+            }}
+          >
+            {busy ? 'Forging…' : 'Generate new design'}
+          </button>
+          <button
+            type="button"
+            className="btn btn-ghost"
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              onDownload()
+            }}
+          >
+            Download STL
+          </button>
+        </div>
+        {status ? <p className="status-line" role="status">{status}</p> : null}
+      </section>
 
+      <main className="stage">
+        <section className={`hero-visual ${flash ? 'is-regen' : ''}`}>
+          <FigureViewer spec={design} />
+        </section>
+
+        <section className="hero-meta">
           <dl className="meta">
             <div>
               <dt>Print</dt>
@@ -110,7 +140,7 @@ export default function App() {
         <section className="history">
           <div className="history-head">
             <h2>Recent regenerations</h2>
-            <p>Click any to restore and download again.</p>
+            <p>Tap any to restore and download again.</p>
           </div>
           <ul className="history-list">
             {history.map((item) => (

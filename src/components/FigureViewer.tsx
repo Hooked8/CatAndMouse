@@ -1,6 +1,6 @@
 import { Canvas } from '@react-three/fiber'
-import { ContactShadows, Environment, OrbitControls } from '@react-three/drei'
-import { Suspense, useLayoutEffect, useMemo } from 'react'
+import { OrbitControls } from '@react-three/drei'
+import { useLayoutEffect, useMemo } from 'react'
 import * as THREE from 'three'
 import type { DesignSpec } from '../lib/designs'
 import { buildFigureGroup } from '../lib/buildFigure'
@@ -30,24 +30,25 @@ export function FigureViewer({ spec }: { spec: DesignSpec }) {
     <div className="viewer">
       <Canvas
         camera={{ position: [2.2, 1.6, 2.6], fov: 38 }}
-        dpr={[1, 1.75]}
-        gl={{ antialias: true, alpha: true }}
+        dpr={[1, 1.5]}
+        gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+        onCreated={({ gl }) => {
+          gl.domElement.style.touchAction = 'none'
+        }}
       >
         <color attach="background" args={['#0c1118']} />
-        <ambientLight intensity={0.45} />
-        <directionalLight castShadow position={[4, 6, 3]} intensity={1.35} />
-        <directionalLight position={[-3, 2, -2]} intensity={0.35} color="#7ec8ff" />
-        <Suspense fallback={null}>
-          <FigureModel key={spec.id} spec={spec} />
-          <ContactShadows position={[0, -0.02, 0]} opacity={0.45} scale={6} blur={2.5} />
-          <Environment preset="city" />
-        </Suspense>
+        <ambientLight intensity={0.55} />
+        <directionalLight position={[4, 6, 3]} intensity={1.25} />
+        <directionalLight position={[-3, 2, -2]} intensity={0.4} color="#7ec8ff" />
+        <hemisphereLight args={['#b1e1ff', '#1a1a1a', 0.35]} />
+        <FigureModel key={spec.id} spec={spec} />
         <OrbitControls
+          makeDefault
           enablePan={false}
           minDistance={1.6}
           maxDistance={5}
           autoRotate
-          autoRotateSpeed={0.7}
+          autoRotateSpeed={0.55}
           target={[0, 0.7, 0]}
         />
       </Canvas>
