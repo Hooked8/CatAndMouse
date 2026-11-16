@@ -1,34 +1,22 @@
-# Image & source attribution
+# Attribution
 
-## Utah Geological Survey (educational use; credit required)
+Full per-image table (URL, license, honesty label, caption): see **[IMAGE_MANIFEST.md](IMAGE_MANIFEST.md)**.
 
-| File | Description | Source |
-| --- | --- | --- |
-| `ugs-silver-reef-azurite-malachite*.jpg` | Silver Reef azurite/malachite on sandstone | [GeoSights: Silver Reef](https://geology.utah.gov/map-pub/survey-notes/geosights/geosights-silver-reef-washington-county-utah/) |
-| `ugs-silver-reef-cliffs*.jpg` | Wall and cliffs at Silver Reef | Same |
-| `ugs-museum*.jpg` / `ugs-museum-town*.jpg` | Museum / townsite (DOGM via UGS) | Same |
-| `ugs-location-map*.jpg` | Location map with labeled reefs | Same |
+## Honesty rule
 
-## Wikimedia Commons / museums / GeoDIL
+- **Silver Reef locality** images are only those published as Silver Reef / district material (chiefly Utah Geological Survey GeoSights).
+- **Reference** images are same-species or analogous habits from other localities (Frisco AgCl, St. George / San Juan / Salina Cu, German crystal AgCl, Chinle plant-Cu analogs, Zion barren sandstone, iron/varnish/gypsum lookalikes). They are never labeled as Silver Reef finds.
+- Mindat is cited for occurrence confirmation; Mindat photographer copyrights are not republished unless the file is also on Wikimedia under a clear free license.
 
-| File | Locality (as labeled on site) | License |
-| --- | --- | --- |
-| `chlorargyrite-frisco-utah*.jpg` | Horn Silver Mine, Frisco, UT (reference AgCl) | CC0 · GeoDIL 192 |
-| `chlorargyrite-geodil-189*.jpg` | Horn Silver Mine, Frisco, UT (reference AgCl) | CC0 · GeoDIL 189 |
-| `azurite-malachite-apex-stgeorge*.jpg` | Apex Mine, St. George, UT (reference) | CC BY 2.0 · James St. John |
-| `azurite-malachite-san-juan*.jpg` | San Juan County, UT · MNHN Paris | CC BY 4.0 |
-| `cu-veins-sandstone-salina*.jpg` | Salina Canyon, UT (comparison) | CC BY 2.0 · James St. John |
-| `malachite-salina*.jpg` | Salina Canyon, UT | CC BY 2.0 · James St. John |
-| `kayenta-zion*.jpg` | Zion Canyon stratigraphy | CC BY 2.0 · James St. John |
-| `crossbedding-ordinary*.jpg` | Zion area ordinary sandstone | Public domain |
-| `carnotite-stgeorge*.jpg` | St. George area carnotite on wood (reference) | CC BY-SA 3.0 |
-| `wells-fargo*.jpg` / HABS | Silver Reef Wells Fargo building | Public domain |
-| `view-historic*.jpg` | Historic Silver Reef view · Ottinger | Public domain |
-| `cosmopolitan-1800s*.jpg` | Historic restaurant | Public domain |
-| `asarco-silver-reef*.jpg` | ASARCO works, Silver Reef | CC BY-SA 3.0 |
-| `silver-reef-ghost-town*.jpg` | Silver Reef townsite | Public domain |
-| `silver-reef-jail*.jpg` | Silver Reef jail | CC BY 4.0 |
-| `ore-bin*.jpg` | Ore bin | CC BY 2.0 |
-| `springdale-stratigraphy*.jpg` | Springdale in regional stack | CC BY-SA 3.0 |
+## Primary geology text
 
-Chlorargyrite **occurrence** at Silver Reef mines is documented on Mindat; openly licensed high-resolution Silver Reef chlorargyrite hand-specimen photos were not available for republication at build time, so Utah GeoDIL AgCl plates are used as species references with explicit non-Silver-Reef locality labels.
+- Milligan, M. — [UGS GeoSights: Silver Reef](https://geology.utah.gov/map-pub/survey-notes/geosights/geosights-silver-reef-washington-county-utah/)
+- Biek, R.F. & Rohrer — Silver Reef Mining District geosite / DOGM mining history papers
+
+## UGS images (educational use; credit + link required)
+
+`ugs-silver-reef-azurite-malachite*`, `ugs-silver-reef-cliffs*`, `ugs-museum-town*`, `ugs-location-map*`
+
+## Wikimedia / GeoDIL / museums
+
+All other plates—see IMAGE_MANIFEST.md for Commons file pages and license short names (CC0, CC BY, CC BY-SA, public domain).
