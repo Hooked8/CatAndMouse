@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pulseform Cryptex Vault 6767</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root { --ink:#f3f7fb; --soft:#c5d0db; --muted:#7f8f9f; --teal:#2ec4b6; --amber:#ff9f1c; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; font-family: Outfit, sans-serif; color: var(--ink);
+      background:
+        radial-gradient(ellipse 80% 55% at 15% 10%, rgba(46,196,182,.16), transparent 55%),
+        linear-gradient(165deg, #070b10 0%, #101820 42%, #0a1219 100%);
+    }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 1.25rem 1.25rem 3rem; }
+    .brand { font-family: Syne, sans-serif; font-size: 2rem; font-weight: 800; letter-spacing: -.03em; margin: 0; }
+    .sub { margin: .2rem 0 1.25rem; color: var(--muted); letter-spacing: .14em; text-transform: uppercase; font-size: .75rem; }
+    .eyebrow { color: var(--amber); font-size: .78rem; letter-spacing: .16em; text-transform: uppercase; margin: 0 0 .5rem; }
+    h1 { font-family: Syne, sans-serif; font-size: clamp(2.1rem, 8vw, 3.2rem); margin: 0; letter-spacing: -.04em; line-height: .95; }
+    .tag { color: var(--soft); margin: .85rem 0 1.25rem; line-height: 1.55; }
+    .code {
+      display: inline-flex; gap: .35rem; margin: 0 0 1.25rem; font-family: Syne, sans-serif; font-size: 1.6rem; font-weight: 800;
+    }
+    .code span {
+      width: 2.4rem; height: 2.8rem; display: grid; place-items: center;
+      border-radius: .5rem; background: rgba(46,196,182,.15); border: 1px solid rgba(46,196,182,.45); color: var(--teal);
+    }
+    .row { display: flex; flex-wrap: wrap; gap: .65rem; }
+    a.btn, button {
+      appearance: none; border: 0; cursor: pointer; font: inherit; font-weight: 600;
+      padding: .95rem 1.15rem; border-radius: .65rem; text-decoration: none; text-align: center; flex: 1;
+    }
+    .primary { color: #041016; background: linear-gradient(135deg, var(--teal), #7ee8de); }
+    .ghost { color: var(--ink); background: transparent; border: 1px solid rgba(255,255,255,.2); }
+    canvas#view {
+      width: 100%; height: 300px; margin-top: 1.25rem; border-radius: 1rem;
+      border: 1px solid rgba(255,255,255,.08); background: #0c1118; display: block;
+    }
+    .card {
+      margin-top: 1.25rem; padding: 1rem 1.1rem; border-radius: 1rem;
+      border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.03);
+    }
+    .card h2 { margin: 0 0 .45rem; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+    .card p { margin: 0 0 .9rem; color: var(--soft); line-height: 1.5; font-size: .95rem; }
+    .card p:last-child { margin-bottom: 0; }
+    #status { margin: .85rem 0 0; color: var(--teal); font-size: .9rem; min-height: 1.3em; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <p class="brand">Pulseform</p>
+    <p class="sub">Printable lock vault</p>
+    <p class="eyebrow">One-print cylinder lock</p>
+    <h1>Cryptex Vault 6767</h1>
+    <p class="tag">
+      Sliding bike-lock style cylinder with four moving dials. Only one code opens it.
+      Align the dials, pull the nose, and the vault slides out — stash cavity inside.
+    </p>
+    <div class="code" aria-label="Combination 6767">
+      <span>6</span><span>7</span><span>6</span><span>7</span>
+    </div>
+    <div class="row">
+      <a class="btn primary" id="dl" href="./pulseform-cryptex-6767.stl" download="pulseform-cryptex-6767.stl">Download STL</a>
+      <a class="btn ghost" href="./">Open 3D studio</a>
+    </div>
+    <p id="status">Print-ready STL · code factory-set to 6767</p>
+    <canvas id="view" width="640" height="300" aria-label="Cryptex sketch"></canvas>
+    <div class="card">
+      <h2>How it opens</h2>
+      <p>Line each dial’s amber tick with the amber witness ridge. Order rear→nose: 6 · 7 · 6 · 7. Pull the light grip to slide the vault open.</p>
+      <h2>Inside</h2>
+      <p>~22mm diameter × 42mm deep stash pocket for a key, USB stick, note, or ring.</p>
+      <h2>Print</h2>
+      <p>0.16–0.2mm layers, 3–4 walls, 25% gyroid. ~0.4mm print-in-place clearance. Gently free each dial after printing, then test the unlock.</p>
+      <h2>Sell</h2>
+      <p>Puzzle gifts, proposal boxes, escape-room props. Unpainted $22–$35 · painted $45–$70.</p>
+    </div>
+  </div>
+  <script>
+    const c = document.getElementById('view');
+    const ctx = c.getContext('2d');
+    const w = c.width, h = c.height;
+    function draw() {
+      ctx.fillStyle = '#0c1118'; ctx.fillRect(0,0,w,h);
+      const cx = w/2, cy = h/2;
+      // body
+      ctx.fillStyle = '#2a3544';
+      roundRect(cx-210, cy-48, 420, 96, 40);
+      // dials
+      const dials = [6,7,6,7];
+      dials.forEach((d,i) => {
+        const x = cx - 105 + i*70;
+        ctx.fillStyle = '#2ec4b6';
+        roundRect(x-28, cy-52, 56, 104, 12);
+        ctx.fillStyle = '#ff9f1c';
+        ctx.font = '700 28px Syne, sans-serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(String(d), x, cy);
+      });
+      // grip
+      ctx.fillStyle = '#e8eef7';
+      roundRect(cx+160, cy-36, 70, 72, 28);
+      // witness
+      ctx.fillStyle = '#ff9f1c';
+      ctx.fillRect(cx-200, cy-70, 14, 10);
+      // cavity hint
+      ctx.strokeStyle = '#7f8f9f';
+      ctx.beginPath(); ctx.arc(cx+185, cy, 16, 0, Math.PI*2); ctx.stroke();
+    }
+    function roundRect(x,y,w,h,r){
+      ctx.beginPath();
+      ctx.moveTo(x+r,y);
+      ctx.arcTo(x+w,y,x+w,y+h,r);
+      ctx.arcTo(x+w,y+h,x,y+h,r);
+      ctx.arcTo(x,y+h,x,y,r);
+      ctx.arcTo(x,y,x+w,y,r);
+      ctx.closePath(); ctx.fill();
+    }
+    draw();
+    document.getElementById('dl').addEventListener('click', () => {
+      document.getElementById('status').textContent = 'Downloading pulseform-cryptex-6767.stl…';
+    });
+  </script>
+</body>
+</html>

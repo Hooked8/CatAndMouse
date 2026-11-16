@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/export-cryptex.mjs",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "export:cryptex": "node scripts/export-cryptex.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.9",
