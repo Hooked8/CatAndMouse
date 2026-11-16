@@ -405,15 +405,33 @@
   .stage {
     grid-template-columns: 1fr;
     min-height: auto;
-    gap: 1.5rem;
+    gap: 1.1rem;
+    padding-bottom: 1.5rem;
   }
 
   .hero-visual {
-    min-height: 52vh;
+    min-height: 42vh;
     order: -1;
   }
 
   .title {
     font-size: clamp(2.2rem, 10vw, 3.2rem);
+  }
+
+  .cta-row {
+    position: sticky;
+    bottom: 0.75rem;
+    z-index: 5;
+    padding: 0.55rem;
+    margin-bottom: 1rem;
+    border-radius: 0.85rem;
+    background: rgba(7, 11, 16, 0.82);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .btn {
+    flex: 1 1 auto;
+    text-align: center;
   }
 }

@@ -38,7 +38,7 @@ export function FigureViewer({ spec }: { spec: DesignSpec }) {
         <directionalLight castShadow position={[4, 6, 3]} intensity={1.35} />
         <directionalLight position={[-3, 2, -2]} intensity={0.35} color="#7ec8ff" />
         <Suspense fallback={null}>
-          <FigureModel spec={spec} />
+          <FigureModel key={spec.id} spec={spec} />
           <ContactShadows position={[0, -0.02, 0]} opacity={0.45} scale={6} blur={2.5} />
           <Environment preset="city" />
         </Suspense>

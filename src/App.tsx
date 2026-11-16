@@ -20,14 +20,13 @@ export default function App() {
 
   const regenerate = useCallback(() => {
     setFlash(true)
+    const next = generateDesign(freshSeed())
     startTransition(() => {
-      setDesign((prev) => {
-        setHistory((h) => [prev, ...h].slice(0, HISTORY_MAX))
-        return generateDesign(freshSeed())
-      })
+      setHistory((h) => [design, ...h].slice(0, HISTORY_MAX))
+      setDesign(next)
       setGenCount((n) => n + 1)
     })
-  }, [])
+  }, [design])
 
   useEffect(() => {
     if (!flash) return
