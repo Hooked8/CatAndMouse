@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pulseform — AI 3D Print Toy Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #f3f7fb;
+      --soft: #c5d0db;
+      --muted: #7f8f9f;
+      --teal: #2ec4b6;
+      --amber: #ff9f1c;
+      --bg: #070b10;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Outfit, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse 80% 55% at 15% 10%, rgba(46,196,182,.16), transparent 55%),
+        linear-gradient(165deg, #070b10 0%, #101820 42%, #0a1219 100%);
+    }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 1.25rem 1.25rem 3rem; }
+    .brand { font-family: Syne, sans-serif; font-size: 2rem; font-weight: 800; letter-spacing: -.03em; margin: 0; }
+    .sub { margin: .2rem 0 1.5rem; color: var(--muted); letter-spacing: .14em; text-transform: uppercase; font-size: .75rem; }
+    .eyebrow { color: var(--amber); font-size: .78rem; letter-spacing: .16em; text-transform: uppercase; margin: 0 0 .5rem; }
+    h1 { font-family: Syne, sans-serif; font-size: clamp(2.2rem, 8vw, 3.4rem); margin: 0; letter-spacing: -.04em; line-height: .95; }
+    .tag { color: var(--soft); margin: .85rem 0 1.25rem; line-height: 1.5; }
+    .row { display: flex; flex-wrap: wrap; gap: .65rem; }
+    button {
+      appearance: none; border: 0; cursor: pointer; font: inherit; font-weight: 600;
+      padding: .95rem 1.15rem; border-radius: .65rem;
+    }
+    #gen { color: #041016; background: linear-gradient(135deg, var(--teal), #7ee8de); flex: 1; }
+    #dl { color: var(--ink); background: transparent; border: 1px solid rgba(255,255,255,.2); flex: 1; }
+    #status { margin: .85rem 0 0; color: var(--teal); font-size: .9rem; min-height: 1.3em; }
+    .card {
+      margin-top: 1.5rem; padding: 1rem 1.1rem; border-radius: 1rem;
+      border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.03);
+    }
+    .card h2 { margin: 0 0 .55rem; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+    .card p { margin: 0 0 .85rem; color: var(--soft); line-height: 1.5; font-size: .95rem; }
+    .card p:last-child { margin-bottom: 0; }
+    .swatches { display: flex; gap: .4rem; margin-top: 1rem; }
+    .swatches span { width: 1.3rem; height: 1.3rem; border-radius: .35rem; border: 1px solid rgba(255,255,255,.2); }
+    .count { float: right; color: var(--muted); font-size: .85rem; }
+    .count b { color: var(--teal); }
+    canvas#view {
+      width: 100%; height: 320px; margin-top: 1.25rem; border-radius: 1rem;
+      border: 1px solid rgba(255,255,255,.08); background: #0c1118; display: block;
+    }
+    .hint { color: var(--muted); font-size: .8rem; margin-top: .5rem; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <span class="count">Design <b id="count">001</b></span>
+    <p class="brand">Pulseform</p>
+    <p class="sub">AI print design lab</p>
+
+    <p class="eyebrow" id="archetype">Space Hero</p>
+    <h1 id="name">Loading…</h1>
+    <p class="tag" id="tagline"></p>
+
+    <div class="row">
+      <button type="button" id="gen">Generate new design</button>
+      <button type="button" id="dl">Download STL</button>
+    </div>
+    <p id="status">Ready — tap Generate anytime</p>
+
+    <canvas id="view" width="640" height="320" aria-label="Simple figure preview"></canvas>
+    <p class="hint">Simple preview (works on every phone). Use Download STL for the printable file.</p>
+
+    <div class="card">
+      <h2>Print</h2>
+      <p id="print"></p>
+      <h2>Sell idea</h2>
+      <p id="biz"></p>
+      <h2>Price band</h2>
+      <p id="price"></p>
+      <div class="swatches" id="swatches"></div>
+    </div>
+  </div>
+
+  <script>
+  const ARCH = [
+    {
+      key: 'space-hero', label: 'Space Hero',
+      prefix: ['Nova','Orbit','Pulse','Astra','Quasar','Vega'],
+      suffix: ['Ranger','Captain','Scout','Commander','Ace'],
+      tag: ['Hero pose, ready for display shelves.','Bold silhouette that photographs like a collectible.'],
+      biz: ['Sell painted 6" heroes on Etsy as desktop explorers — $28–$45.','Bundle unpainted packs of 3 for birthday paint kits.'],
+      print: '0.16–0.2mm layers, 15% gyroid infill, tree supports under arms. Scale 80–120mm.',
+      price: 'Unpainted $18 · Painted $35–$48',
+      colors: ['#1B4D89','#F2C14E','#E8EEF7']
+    },
+    {
+      key: 'mech-guardian', label: 'Mech Guardian',
+      prefix: ['Titan','Aegis','Bolt','Forge','Iron','Unit'],
+      suffix: ['Mk-II','Defender','Core','Sentinel','Chassis'],
+      tag: ['Chunky armor plates tuned for FDM.','Desk guardian statue energy.'],
+      biz: ['Offer desk guardians to tech offices.','List STL variants on Printables with tip-jar links.'],
+      print: 'Print upright. 0.2mm layers, 20% infill. Optional waist split.',
+      price: 'Unpainted $22 · Painted $40–$55',
+      colors: ['#3D5A5B','#E07A3D','#C5D5D6']
+    },
+    {
+      key: 'kaiju-mini', label: 'Kaiju Mini',
+      prefix: ['Rift','Roar','Scale','Ember','Volcan','Tide'],
+      suffix: ['Cub','Spawn','Whelp','Jr.','Mini'],
+      tag: ['Pocket monster energy with printable stance.','Roaring silhouette kids and collectors grab.'],
+      biz: ['Blind-bag color variants at craft fairs $12.','Pair with LED bases as night-light kaiju $35.'],
+      print: 'Stable base. 0.16mm for claws. Minimal supports.',
+      price: 'Blind bag $10–$14 · LED set $32',
+      colors: ['#2D6A4F','#D8F3DC','#FFB703']
+    },
+    {
+      key: 'cute-critter', label: 'Cute Critter',
+      prefix: ['Puff','Bean','Mochi','Pip','Noodle','Bumble'],
+      suffix: ['Buddy','Pal','Pet','Friend','Charm'],
+      tag: ['Chibi proportions engineered for zero-fail prints.','Gift-shop friendly overnight color packs.'],
+      biz: ['Desk pets for teachers $8–$15.','Seasonal recolors keep the mesh earning all year.'],
+      print: 'Beginner-friendly: no supports at default pose.',
+      price: 'Desk pet $8–$15 · Seasonal pack $28',
+      colors: ['#FF8FAB','#FFE5EC','#FB6F92']
+    },
+    {
+      key: 'neon-ninja', label: 'Neon Ninja',
+      prefix: ['Shade','Volt','Ghost','Circuit','Flash','Echo'],
+      suffix: ['Operative','Shadow','Runner','Agent'],
+      tag: ['Sharp angles, stealth stance, night-city energy.','Killer in glow filament.'],
+      biz: ['Glow + black stands = Instagram product photos.','Phone-stand hybrids for higher price.'],
+      print: 'Print with brim. Glow PLA recommended.',
+      price: 'Glow print $18 · Phone-stand hybrid $36',
+      colors: ['#0F0F0F','#39FF14','#222222']
+    },
+    {
+      key: 'fantasy-knight', label: 'Fantasy Knight',
+      prefix: ['Oath','Rune','Valor','Shield','Crown','Blade'],
+      suffix: ['Paladin','Warden','Squire','Champion','Guard'],
+      tag: ['Classic tabletop hero energy.','Banner-ready shelf pose.'],
+      biz: ['RPG party packs to D&D groups $40 painted trio.','Custom crest cake toppers.'],
+      print: 'Supports under cape & weapon. 0.12–0.16mm for armor edges.',
+      price: 'Single $20 · Party pack $55',
+      colors: ['#1D3557','#A8DADC','#E63946']
+    }
+  ];
+
+  let seed = (Date.now() ^ (Math.random()*1e9)) >>> 0;
+  let count = 1;
+  let current = null;
+
+  function rng(s) {
+    let t = s >>> 0;
+    return () => {
+      t += 0x6d2b79f5;
+      let r = Math.imul(t ^ (t >>> 15), 1 | t);
+      r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
+      return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function pick(r, arr) { return arr[Math.floor(r() * arr.length)]; }
+
+  function makeDesign(s) {
+    const r = rng(s);
+    const a = pick(r, ARCH);
+    return {
+      id: 'pf-' + s.toString(36),
+      seed: s,
+      name: pick(r, a.prefix) + ' ' + pick(r, a.suffix),
+      archetype: a.label,
+      tagline: pick(r, a.tag),
+      businessIdea: pick(r, a.biz),
+      printNotes: a.print,
+      priceHint: a.price,
+      palette: a.colors,
+      body: 0.85 + r() * 0.35,
+      head: 0.85 + r() * 0.4,
+    };
+  }
+
+  function draw(d) {
+    const c = document.getElementById('view');
+    const ctx = c.getContext('2d');
+    const w = c.width, h = c.height;
+    ctx.clearRect(0,0,w,h);
+    ctx.fillStyle = '#0c1118';
+    ctx.fillRect(0,0,w,h);
+    const [p,a,l] = d.palette;
+    const cx = w/2, baseY = h*0.82;
+    // base
+    ctx.fillStyle = l;
+    ctx.beginPath(); ctx.ellipse(cx, baseY, 90, 18, 0, 0, Math.PI*2); ctx.fill();
+    // legs
+    ctx.fillStyle = p;
+    ctx.fillRect(cx-38, baseY-90, 24, 90);
+    ctx.fillRect(cx+14, baseY-90, 24, 90);
+    // torso
+    const th = 90 * d.body;
+    ctx.fillRect(cx-48, baseY-90-th, 96, th);
+    // chest
+    ctx.fillStyle = a;
+    ctx.fillRect(cx-30, baseY-90-th*0.7, 60, th*0.28);
+    // head
+    const hr = 34 * d.head;
+    ctx.fillStyle = l;
+    ctx.beginPath(); ctx.arc(cx, baseY-90-th-hr*0.2, hr, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = a;
+    ctx.fillRect(cx-hr*0.7, baseY-90-th-hr*0.35, hr*1.4, hr*0.35);
+    // arms
+    ctx.fillStyle = p;
+    ctx.fillRect(cx-78, baseY-90-th*0.85, 22, 70);
+    ctx.fillRect(cx+56, baseY-90-th*0.85, 22, 70);
+  }
+
+  function render(d) {
+    current = d;
+    document.getElementById('name').textContent = d.name;
+    document.getElementById('archetype').textContent = d.archetype;
+    document.getElementById('tagline').textContent = d.tagline;
+    document.getElementById('print').textContent = d.printNotes;
+    document.getElementById('biz').textContent = d.businessIdea;
+    document.getElementById('price').textContent = d.priceHint;
+    document.getElementById('count').textContent = String(count).padStart(3,'0');
+    const sw = document.getElementById('swatches');
+    sw.innerHTML = '';
+    d.palette.forEach(col => {
+      const s = document.createElement('span');
+      s.style.background = col;
+      sw.appendChild(s);
+    });
+    draw(d);
+  }
+
+  function generate() {
+    seed = (Date.now() ^ (Math.random()*1e9) ^ (seed*2654435761)) >>> 0;
+    count += 1;
+    const d = makeDesign(seed);
+    render(d);
+    document.getElementById('status').textContent = 'New design: ' + d.name;
+  }
+
+  // Minimal ASCII STL: a scaled boxy figure from primitives as triangles
+  function downloadStl() {
+    const d = current;
+    const tris = [];
+    function box(x,y,z,w,h,de) {
+      const v = [
+        [x,y,z],[x+w,y,z],[x+w,y+h,z],[x,y+h,z],
+        [x,y,z+de],[x+w,y,z+de],[x+w,y+h,z+de],[x,y+h,z+de]
+      ];
+      const faces = [[0,1,2,3],[4,7,6,5],[0,4,5,1],[2,6,7,3],[0,3,7,4],[1,5,6,2]];
+      faces.forEach(f => {
+        tris.push([v[f[0]], v[f[1]], v[f[2]]]);
+        tris.push([v[f[0]], v[f[2]], v[f[3]]]);
+      });
+    }
+    const s = 10;
+    box(-12,0,-8,24,8,20); // base-ish feet area
+    box(-8,8,-6,6,28,10);
+    box(2,8,-6,6,28,10);
+    box(-14,36,-8,28,32*d.body,14);
+    box(-10,36+32*d.body,-8,20,18*d.head,14);
+    box(-22,48,-4,8,24,8);
+    box(14,48,-4,8,24,8);
+
+    let out = 'solid pulseform\n';
+    tris.forEach(t => {
+      out += '  facet normal 0 0 0\n    outer loop\n';
+      t.forEach(p => { out += `      vertex ${p[0]*s} ${p[1]*s} ${p[2]*s}\n`; });
+      out += '    endloop\n  endfacet\n';
+    });
+    out += 'endsolid pulseform\n';
+    const blob = new Blob([out], { type: 'application/octet-stream' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = d.name.toLowerCase().replace(/[^a-z0-9]+/g,'-') + '-' + d.id + '.stl';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
+    document.getElementById('status').textContent = 'Downloaded ' + a.download;
+  }
+
+  document.getElementById('gen').onclick = generate;
+  document.getElementById('dl').onclick = downloadStl;
+  generate();
+  count = 1;
+  document.getElementById('count').textContent = '001';
+  document.getElementById('status').textContent = 'Ready — tap Generate anytime';
+  </script>
+</body>
+</html>
