@@ -185,12 +185,16 @@
       feedbackEl.textContent = `Not quite. ${item.why}`;
     }
 
+    nextBtn.hidden = true;
+    restartBtn.hidden = true;
     if (index < quizItems.length - 1) {
       nextBtn.hidden = false;
       nextBtn.textContent = "Next question";
+      nextBtn.focus();
     } else {
       feedbackEl.textContent += ` Final score: ${score} / ${quizItems.length}.`;
       restartBtn.hidden = false;
+      restartBtn.focus();
     }
   }
 

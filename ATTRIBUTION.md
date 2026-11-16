@@ -7,8 +7,7 @@
 | `ugs-silver-reef-azurite-malachite*.jpg` | Silver Reef azurite/malachite on sandstone | [GeoSights: Silver Reef](https://geology.utah.gov/map-pub/survey-notes/geosights/geosights-silver-reef-washington-county-utah/) |
 | `ugs-silver-reef-cliffs*.jpg` | Wall and cliffs at Silver Reef | Same |
 | `ugs-museum*.jpg` / `ugs-museum-town*.jpg` | Museum / townsite (DOGM via UGS) | Same |
-| `ugs-location-map*.jpg` | Location map | Same |
-| `ugs-figure-reefs*.jpg` | Reefs / anticline figure | Same / UGA educational materials |
+| `ugs-location-map*.jpg` | Location map with labeled reefs | Same |
 
 ## Wikimedia Commons / museums / GeoDIL
 
