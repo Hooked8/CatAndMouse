@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Classroom Engineering Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #152028;
+      --paper: #e9eef2;
+      --steel: #3a5568;
+      --accent: #c4782a;
+      --panel: rgba(21, 32, 40, 0.78);
+      --line: rgba(255, 255, 255, 0.14);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: "Source Sans 3", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, #6f8798 0%, transparent 55%),
+        radial-gradient(900px 500px at 100% 0%, #c4782a55 0%, transparent 45%),
+        linear-gradient(160deg, #1b2730 0%, #314654 42%, #d7dee4 42.1%, #e9eef2 100%);
+      min-height: 100vh;
+    }
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 2rem;
+      align-items: center;
+      padding: 3rem clamp(1.25rem, 4vw, 4rem);
+      color: #f4f7f9;
+    }
+    .brand {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      letter-spacing: 0.04em;
+      line-height: 0.92;
+      margin: 0 0 1rem;
+    }
+    .lede {
+      font-size: 1.15rem;
+      max-width: 34rem;
+      line-height: 1.5;
+      color: #d7e0e7;
+      margin: 0 0 1.75rem;
+    }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+    .btn {
+      appearance: none;
+      border: 0;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.85rem 1.2rem;
+      font-weight: 700;
+      font-size: 0.95rem;
+      border-radius: 4px;
+      transition: transform 160ms ease, background 160ms ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary { background: var(--accent); color: #1a1208; }
+    .btn-ghost { background: transparent; color: #f4f7f9; outline: 1px solid var(--line); }
+    .plate-wrap {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 0.85rem;
+      backdrop-filter: blur(8px);
+      animation: rise 700ms ease both;
+    }
+    .plate-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 6px;
+    }
+    .caption {
+      margin: 0.7rem 0 0;
+      font-size: 0.85rem;
+      color: #c5d0d8;
+    }
+    main {
+      padding: 3rem clamp(1.25rem, 4vw, 4rem) 4rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    h2 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 2.4rem;
+      letter-spacing: 0.04em;
+      margin: 0 0 0.75rem;
+      color: var(--ink);
+    }
+    .section-copy {
+      color: var(--steel);
+      max-width: 42rem;
+      margin: 0 0 1.5rem;
+      line-height: 1.5;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    .card-link {
+      background: #fff;
+      border: 1px solid #c9d3db;
+      border-radius: 8px;
+      padding: 1rem 1.1rem;
+      text-decoration: none;
+      color: var(--ink);
+      display: block;
+      transition: border-color 160ms ease, transform 160ms ease;
+    }
+    .card-link:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .card-link strong { display: block; margin-bottom: 0.25rem; }
+    .card-link span { color: var(--steel); font-size: 0.92rem; }
+    .notice {
+      background: #fff7ed;
+      border-left: 4px solid var(--accent);
+      padding: 0.9rem 1rem;
+      margin: 0 0 2rem;
+      color: #5a3a16;
+    }
+    .diagram {
+      background: #fff;
+      border: 1px solid #c9d3db;
+      border-radius: 8px;
+      padding: 1rem;
+      overflow: auto;
+    }
+    .diagram img, .diagram object { width: 100%; min-height: 280px; }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 860px) {
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+        padding-top: 2.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div>
+      <p class="brand">Classroom<br />Engineering Demo</p>
+      <p class="lede">
+        Two printable lessons on one build plate: a non-functional educational cutaway display,
+        and a separate truncated-cone mold demo. Oriented for a 220×220 mm bed with no supports.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#downloads">Download print files</a>
+        <a class="btn btn-ghost" href="files/PRINT_INSTRUCTIONS.md">Print instructions</a>
+      </div>
+    </div>
+    <div class="plate-wrap">
+      <img src="assets/plate_preview.png" alt="Packed build plate preview for 220 by 220 millimeter printer" />
+      <p class="caption">Packed layout · fits 220×220 mm · used ≈ 201×165 mm</p>
+    </div>
+  </header>
+
+  <main>
+    <p class="notice">
+      The cutaway model is marked EDUCATION ONLY / NON-FUNCTIONAL and is not a firearm accessory.
+      The mold lesson uses basic frustum geometry only.
+    </p>
+
+    <h2>Downloads</h2>
+    <p class="section-copy" id="downloads">Individual STLs, combined 3MF with all parts positioned, and docs.</p>
+    <div class="grid">
+      <a class="card-link" href="files/classroom_demo_build_plate.3mf"><strong>Combined 3MF</strong><span>All parts pre-positioned on one plate</span></a>
+      <a class="card-link" href="files/cutaway_body.stl"><strong>cutaway_body.stl</strong><span>Educational cutaway display</span></a>
+      <a class="card-link" href="files/cutaway_cradle.stl"><strong>cutaway_cradle.stl</strong><span>Desk cradle</span></a>
+      <a class="card-link" href="files/baffle_demo_token.stl"><strong>baffle_demo_token.stl</strong><span>Handheld teaching disk</span></a>
+      <a class="card-link" href="files/mold_half_a_pins.stl"><strong>mold_half_a_pins.stl</strong><span>Mold half A · pins</span></a>
+      <a class="card-link" href="files/mold_half_b_sprue.stl"><strong>mold_half_b_sprue.stl</strong><span>Mold half B · sprue</span></a>
+      <a class="card-link" href="files/mold_master_frustum.stl"><strong>mold_master_frustum.stl</strong><span>Truncated-cone master</span></a>
+      <a class="card-link" href="files/ASSEMBLY.md"><strong>Assembly notes</strong><span>How the two lessons fit together</span></a>
+      <a class="card-link" href="files/fit_report.json"><strong>Fit report</strong><span>Bed-fit JSON for the configured printer</span></a>
+    </div>
+
+    <h2>Assembly map</h2>
+    <p class="section-copy">Lesson flow and plate legend.</p>
+    <div class="diagram">
+      <img src="assets/assembly_diagram.svg" alt="Assembly and build plate diagram for both classroom lessons" />
+    </div>
+  </main>
+</body>
+</html>

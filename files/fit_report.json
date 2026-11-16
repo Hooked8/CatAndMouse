@@ -1,0 +1,101 @@
+{
+  "plate": {
+    "bed_mm": [
+      220.0,
+      220.0
+    ],
+    "margin_mm": 8.0,
+    "gap_mm": 6.0,
+    "used_bbox_mm": [
+      200.8000030517578,
+      165.19999885559082,
+      27.991296768188477
+    ],
+    "fits": true,
+    "overflow_parts": [],
+    "part_count": 6,
+    "bed_z_mm": 250.0,
+    "max_part_height_mm": 27.991296768188477,
+    "fits_height": true
+  },
+  "parts": {
+    "cutaway_body": {
+      "description": "Educational non-functional cutaway display (print cut-face down)",
+      "watertight": false,
+      "volume_mm3": null,
+      "bbox_mm": [
+        74.80000305175781,
+        110.5999984741211,
+        17.60000038146973
+      ],
+      "faces": 14666,
+      "vertices": 7343,
+      "stl": "stl/individual/cutaway_body.stl"
+    },
+    "cutaway_cradle": {
+      "description": "Desk cradle for the cutaway display",
+      "watertight": true,
+      "volume_mm3": 16386.257870633857,
+      "bbox_mm": [
+        60.5,
+        48.60000038146973,
+        15.008984327316284
+      ],
+      "faces": 7038,
+      "vertices": 3507,
+      "stl": "stl/individual/cutaway_cradle.stl"
+    },
+    "baffle_demo_token": {
+      "description": "Loose schematic baffle teaching token",
+      "watertight": true,
+      "volume_mm3": 1221.8557926355131,
+      "bbox_mm": [
+        29.600000381469727,
+        29.59079933166504,
+        2.4000000953674316
+      ],
+      "faces": 4364,
+      "vertices": 2186,
+      "stl": "stl/individual/baffle_demo_token.stl"
+    },
+    "mold_half_a_pins": {
+      "description": "Geometric mold half A with alignment pins",
+      "watertight": true,
+      "volume_mm3": 23978.202297639786,
+      "bbox_mm": [
+        40.0,
+        35.599998474121094,
+        26.450000286102295
+      ],
+      "faces": 16126,
+      "vertices": 8065,
+      "stl": "stl/individual/mold_half_a_pins.stl"
+    },
+    "mold_half_b_sprue": {
+      "description": "Geometric mold half B with holes and sprue",
+      "watertight": true,
+      "volume_mm3": 23302.17711237258,
+      "bbox_mm": [
+        40.0,
+        35.599998474121094,
+        20.450000375509266
+      ],
+      "faces": 22946,
+      "vertices": 11471,
+      "stl": "stl/individual/mold_half_b_sprue.stl"
+    },
+    "mold_master_frustum": {
+      "description": "Truncated-cone master pattern (not suppressor geometry)",
+      "watertight": true,
+      "volume_mm3": 9959.654993809338,
+      "bbox_mm": [
+        28.0,
+        31.399999618530273,
+        27.991296768188477
+      ],
+      "faces": 6548,
+      "vertices": 3276,
+      "stl": "stl/individual/mold_master_frustum.stl"
+    }
+  }
+}

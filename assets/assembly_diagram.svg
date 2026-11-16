@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="640" viewBox="0 0 900 640">
+  <rect width="900" height="640" fill="#f7f4ef"/>
+  <text x="32" y="40" font-family="Georgia, serif" font-size="22" fill="#1c1a17">
+    Classroom Engineering Demo — Assembly &amp; Plate Map
+  </text>
+  <text x="32" y="66" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#5a5348">
+    Two separate lessons on one 220×220 mm build plate (margin 8 mm)
+  </text>
+
+  <!-- Plate outline -->
+  <rect x="40" y="100" width="420" height="420" fill="#e8e2d8" stroke="#2b2924" stroke-width="2"/>
+  <text x="50" y="120" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#2b2924">
+    Build plate 220 × 220 mm
+  </text>
+
+  <!-- Schematic part blocks (illustrative layout) -->
+  <rect x="60" y="140" width="200" height="70" rx="4" fill="#c45c26" stroke="#2b2924"/>
+  <text x="70" y="170" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#fff">1 cutaway_body</text>
+  <text x="70" y="188" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#ffe8d8">cut-face down</text>
+
+  <rect x="280" y="140" width="150" height="70" rx="4" fill="#2f6f6a" stroke="#2b2924"/>
+  <text x="290" y="170" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#fff">2 cutaway_cradle</text>
+
+  <rect x="60" y="230" width="90" height="50" rx="4" fill="#c45c26" stroke="#2b2924"/>
+  <text x="68" y="260" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#fff">3 baffle token</text>
+
+  <rect x="170" y="230" width="130" height="100" rx="4" fill="#3d5a80" stroke="#2b2924"/>
+  <text x="180" y="275" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#fff">4 mold_half_a</text>
+  <text x="180" y="293" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#dce7f5">pins</text>
+
+  <rect x="320" y="230" width="130" height="100" rx="4" fill="#3d5a80" stroke="#2b2924"/>
+  <text x="330" y="275" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#fff">5 mold_half_b</text>
+  <text x="330" y="293" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#dce7f5">sprue</text>
+
+  <rect x="60" y="360" width="100" height="80" rx="4" fill="#3d5a80" stroke="#2b2924"/>
+  <text x="70" y="400" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#fff">6 master</text>
+  <text x="70" y="418" font-family="Helvetica, Arial, sans-serif" font-size="10" fill="#dce7f5">frustum</text>
+
+  <!-- Assembly steps -->
+  <text x="500" y="120" font-family="Georgia, serif" font-size="16" fill="#1c1a17">Part 1 — Cutaway display</text>
+  <text x="500" y="148" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#2b2924">
+    A. Print cutaway_body cut-face down (no supports).
+  </text>
+  <text x="500" y="170" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#2b2924">
+    B. Print cradle flat on its base.
+  </text>
+  <text x="500" y="192" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#2b2924">
+    C. Rest body in cradle with internals visible.
+  </text>
+  <text x="500" y="214" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#2b2924">
+    D. Use baffle token as a handheld callout.
+  </text>
+  <text x="500" y="236" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#8a3b12">
+    Marked EDUCATION ONLY / NON-FUNCTIONAL.
+  </text>
+
+  <text x="500" y="290" font-family="Georgia, serif" font-size="16" fill="#1c1a17">Part 2 — Geometric mold</text>
+  <text x="500" y="318" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#2b2924">
+    A. Print both mold halves flat on outer faces.
+  </text>
+  <text x="500" y="340" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#2b2924">
+    B. Mate pins (A) into holes (B) at parting plane.
+  </text>
+  <text x="500" y="362" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#2b2924">
+    C. Optional: pour classroom-safe wax/soap via sprue.
+  </text>
+  <text x="500" y="384" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#2b2924">
+    D. Compare cast to master frustum pattern.
+  </text>
+  <text x="500" y="406" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#3d5a80">
+    Geometry is a truncated cone only — not suppressor geometry.
+  </text>
+
+  <text x="500" y="470" font-family="Georgia, serif" font-size="16" fill="#1c1a17">Legend</text>
+  <rect x="500" y="486" width="18" height="18" fill="#c45c26"/>
+  <text x="528" y="500" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#2b2924">Cutaway lesson</text>
+  <rect x="500" y="516" width="18" height="18" fill="#3d5a80"/>
+  <text x="528" y="530" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#2b2924">Mold lesson</text>
+  <rect x="500" y="546" width="18" height="18" fill="#2f6f6a"/>
+  <text x="528" y="560" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#2b2924">Display stand</text>
+
+  <text x="40" y="560" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#5a5348">
+    Exact positions are in exports/plate_layout.json and the combined 3MF.
+  </text>
+  <text x="40" y="580" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#5a5348">
+    Regenerated by: python3 src/export_all.py
+  </text>
+</svg>
