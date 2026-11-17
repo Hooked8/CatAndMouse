@@ -203,6 +203,9 @@ function ShellsSection({
 }
 
 function WornSection({ shell }: { shell: Shell }) {
+  const wornImage = shell.wornImage ?? shell.image;
+  const isFlat = !shell.wornImage;
+
   return (
     <section className="section worn">
       <div className="worn-panel">
@@ -219,10 +222,15 @@ function WornSection({ shell }: { shell: Shell }) {
             <li>Shells remove for wash or travel without tools</li>
           </ul>
         </div>
-        <figure className="worn-shot">
+        <figure className={`worn-shot ${isFlat ? "flat" : ""}`}>
           <img
-            src="/images/achilles-strap-worn-prism.jpg"
-            alt="Strap worn on knee with fashion shell"
+            key={shell.id}
+            src={wornImage}
+            alt={
+              isFlat
+                ? `${shell.name} snap-on shell`
+                : `ACHILLES strap worn with ${shell.name} shell`
+            }
           />
         </figure>
       </div>

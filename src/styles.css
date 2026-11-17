@@ -56,9 +56,9 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 1.5rem;
-  backdrop-filter: blur(10px);
-  background: color-mix(in srgb, var(--paper) 78%, transparent);
+  gap: 1rem;
+  padding: 0.85rem 1.5rem;
+  background: var(--paper);
   border-bottom: 1px solid var(--line);
 }
 
@@ -298,11 +298,12 @@ a {
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  padding: 0.55rem 0.85rem;
+  padding: 0.55rem 0.9rem;
   border: 1px solid var(--line);
   background: color-mix(in srgb, white 55%, transparent);
   font: inherit;
   cursor: pointer;
+  white-space: nowrap;
   transition:
     border-color 0.2s var(--ease),
     background 0.2s var(--ease),
@@ -453,7 +454,7 @@ a {
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--mute);
+  color: var(--ink-soft);
 }
 
 .shell-card:hover {
@@ -535,9 +536,27 @@ a {
   min-height: 420px;
   transform: scale(1.02);
   transition: transform 1.2s var(--ease);
+  animation: crossfade 0.45s var(--ease) both;
 }
 
-.worn-panel:hover .worn-shot img {
+.worn-shot.flat {
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 40%, #1a222c 0%, #0e1218 70%);
+  padding: 2rem;
+}
+
+.worn-shot.flat img {
+  width: min(100%, 560px);
+  height: auto;
+  min-height: 0;
+  object-fit: contain;
+  transform: none;
+  mix-blend-mode: normal;
+}
+
+.worn-panel:hover .worn-shot:not(.flat) img {
   transform: scale(1.06);
 }
 
@@ -661,8 +680,12 @@ a {
 
 @media (max-width: 640px) {
   .nav {
-    gap: 0.85rem;
-    font-size: 0.72rem;
+    gap: 1rem;
+    font-size: 0.7rem;
+  }
+
+  .nav a {
+    padding: 0.35rem 0;
   }
 
   .hero-brand {

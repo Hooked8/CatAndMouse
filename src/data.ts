@@ -5,6 +5,7 @@ export type Shell = {
   logo: string;
   palette: string[];
   image: string;
+  wornImage?: string;
   notes: string;
 };
 
@@ -16,6 +17,7 @@ export const shells: Shell[] = [
     logo: "Circular labyrinth",
     palette: ["#7B2CBF", "#00C2FF", "#B8F000", "#FF6B00", "#FF1E56"],
     image: "/images/shell-01-prism-labyrinth.jpg",
+    wornImage: "/images/achilles-strap-worn-prism.jpg",
     notes:
       "Direct lift from the brand’s rainbow wave language. High-visibility court energy for night games and highlights.",
   },
@@ -26,6 +28,7 @@ export const shells: Shell[] = [
     logo: "ACHILLES wordmark",
     palette: ["#F3E8FF", "#C084FC", "#7C3AED", "#4C1D95", "#111111"],
     image: "/images/shell-02-violet-marble.jpg",
+    wornImage: "/images/achilles-strap-worn-violet.jpg",
     notes:
       "Cleaner, more fashion-forward colorway. Reads as accessory first, support second.",
   },
@@ -46,6 +49,7 @@ export const shells: Shell[] = [
     logo: "Eye of Horus + ACHILLES",
     palette: ["#0B1C3F", "#1D4ED8", "#38BDF8", "#F8FAFC", "#D4A017"],
     image: "/images/shell-04-horus-agate.jpg",
+    wornImage: "/images/achilles-strap-worn-agate.jpg",
     notes:
       "Premium dark colorway for travel kits and pro looks. Gold veining adds jewelry-level finish.",
   },
