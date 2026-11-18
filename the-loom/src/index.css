@@ -7,7 +7,7 @@
   --copper-bright: #e0a15a;
   --patina: #5f8f86;
   --answer: #1e3d36;
-  --answer-bg: #d8ebe4;
+  --danger: #8a3b32;
   --font-display: 'Fraunces', Georgia, serif;
   --font-body: 'Outfit', sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
@@ -96,7 +96,7 @@ button {
 
 .hero {
   position: relative;
-  min-height: min(58vh, 520px);
+  min-height: min(52vh, 460px);
   display: grid;
   align-items: end;
   padding: clamp(1.5rem, 5vh, 3rem) clamp(1.2rem, 4vw, 2.5rem) clamp(2rem, 5vh, 3rem);
@@ -141,7 +141,7 @@ button {
 .hero-copy {
   position: relative;
   z-index: 1;
-  max-width: 34rem;
+  max-width: 36rem;
 }
 
 .eyebrow {
@@ -166,15 +166,16 @@ button {
   margin: 1rem 0 1.5rem;
   font-size: clamp(1.05rem, 2.3vw, 1.22rem);
   color: var(--ink-soft);
-  max-width: 28rem;
+  max-width: 30rem;
   font-weight: 300;
 }
 
 .cta-row,
-.machine-actions {
+.machine-actions,
+.btn-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 0.65rem;
 }
 
 .btn {
@@ -195,12 +196,6 @@ button {
   color: var(--paper);
 }
 
-.btn.ghost {
-  background: transparent;
-  border-color: rgba(20, 27, 36, 0.22);
-  color: var(--ink);
-}
-
 .btn.small {
   padding: 0.45rem 0.85rem;
   font-size: 0.9rem;
@@ -216,12 +211,14 @@ button {
   gap: 1rem;
 }
 
-.machine.is-spinning .machine-card {
+.machine.is-spinning .machine-card,
+.machine.is-spinning .lock-stamp {
   opacity: 0.55;
   transform: translateY(4px);
 }
 
-.machine-card {
+.machine-card,
+.lock-stamp {
   padding: 1.35rem 1.4rem 1.45rem;
   background: rgba(241, 245, 248, 0.78);
   border: 1px solid rgba(20, 27, 36, 0.08);
@@ -235,8 +232,15 @@ button {
   border-color: rgba(30, 61, 54, 0.12);
 }
 
-.card-label {
-  margin: 0 0 0.55rem;
+.lock-stamp {
+  border-color: rgba(201, 120, 58, 0.4);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.6), rgba(201, 120, 58, 0.1));
+}
+
+.card-label,
+.lock-kicker,
+.answer-sub {
+  margin: 0 0 0.45rem;
   font-size: 0.72rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -244,47 +248,100 @@ button {
   font-weight: 600;
 }
 
-.answer-card .card-label {
+.answer-card .card-label,
+.answer-sub {
   color: var(--patina);
+}
+
+.riddle-title {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 3vw, 1.9rem);
+  letter-spacing: -0.02em;
 }
 
 .riddle-text {
   margin: 0 0 1rem;
-  font-family: var(--font-display);
-  font-size: clamp(1.25rem, 2.8vw, 1.65rem);
-  line-height: 1.45;
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 2.2vw, 1.12rem);
+  line-height: 1.55;
+  white-space: pre-wrap;
+  font-variant-ligatures: none;
+}
+
+.lock-code {
+  margin: 0 0 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 1.35rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.lock-body {
+  margin: 0 0 0.75rem;
+  color: var(--ink);
+  font-size: 1.02rem;
+}
+
+.lock-note,
+.fine,
+.host-note,
+.footer p {
+  margin: 0.65rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+
+.answer-grid {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 0.85rem;
+}
+
+@media (min-width: 720px) {
+  .answer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .answer-text {
-  margin: 0 0 0.65rem;
+  margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(1.8rem, 4vw, 2.4rem);
   font-weight: 700;
-  color: var(--answer);
   letter-spacing: -0.02em;
+  word-break: break-word;
 }
 
-.hint-text {
-  margin: 0 0 1rem;
+.answer-text.core {
+  font-size: clamp(1.35rem, 3vw, 1.8rem);
   color: var(--ink-soft);
-  font-size: 0.95rem;
-  font-style: italic;
+}
+
+.answer-text.final {
+  font-size: clamp(1.7rem, 3.6vw, 2.2rem);
+  color: var(--answer);
+}
+
+.linkish {
+  border: 0;
+  background: none;
+  color: var(--copper);
+  cursor: pointer;
+  padding: 0;
+  margin-top: 0.85rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .machine-actions {
-  margin-top: 0.35rem;
+  margin-top: 0.25rem;
 }
 
 .footer {
   padding: 0.5rem clamp(1.2rem, 4vw, 2.5rem) 2.5rem;
   max-width: 860px;
   margin: 0 auto;
-}
-
-.footer p {
-  margin: 0;
-  color: var(--ink-soft);
-  font-size: 0.92rem;
 }
 
 @keyframes draw-thread {
@@ -318,7 +375,7 @@ button {
 
 @media (max-width: 640px) {
   .hero {
-    min-height: 48vh;
+    min-height: 44vh;
     align-items: center;
   }
 }

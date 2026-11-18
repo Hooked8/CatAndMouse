@@ -1,12 +1,33 @@
 import { useMemo, useState } from 'react'
 import { HeroThreads } from './components/HeroThreads'
-import { generateRiddle, type Riddle } from './engine/riddles'
+import {
+  fullChallengeText,
+  generatePuzzle,
+  shareableRiddleText,
+  type GeneratedPuzzle,
+} from './engine/generate'
+
+function LockStamp({ instruction, code }: { instruction: string; code: string }) {
+  return (
+    <aside className="lock-stamp">
+      <p className="lock-kicker">Precision lock · required</p>
+      <p className="lock-code">{code}</p>
+      <p className="lock-body">{instruction}</p>
+      <p className="lock-note">
+        This lock is separate from the riddle text on purpose. If someone pastes
+        only the riddle into an AI, they miss this step — and the final answer
+        will be wrong.
+      </p>
+    </aside>
+  )
+}
 
 export default function App() {
-  const first = useMemo(() => generateRiddle(), [])
-  const [riddle, setRiddle] = useState<Riddle>(first)
+  const initial = useMemo(() => generatePuzzle(), [])
+  const [puzzle, setPuzzle] = useState<GeneratedPuzzle>(initial)
   const [copied, setCopied] = useState<string | null>(null)
   const [spinning, setSpinning] = useState(false)
+  const [showHostNotes, setShowHostNotes] = useState(true)
 
   function copy(label: string, text: string) {
     void navigator.clipboard.writeText(text)
@@ -14,13 +35,13 @@ export default function App() {
     window.setTimeout(() => setCopied(null), 1400)
   }
 
-  function nextRiddle() {
+  function next() {
     setSpinning(true)
     window.setTimeout(() => {
-      setRiddle(generateRiddle(riddle.id))
+      setPuzzle(generatePuzzle(puzzle.riddle.id))
       setSpinning(false)
       setCopied(null)
-    }, 180)
+    }, 160)
   }
 
   return (
@@ -37,15 +58,16 @@ export default function App() {
       <main className="hero">
         <HeroThreads />
         <div className="hero-copy">
-          <p className="eyebrow">Hard riddle machine</p>
+          <p className="eyebrow">Brutal think-puzzles</p>
           <h1 className="brand-hero">The Loom</h1>
           <p className="lede">
-            Generates tough think-riddles and hands you the answer — so you can
-            stump people without stump yourself.
+            Long, multi-step riddles meant to take a serious sit — then a
+            precision lock so pasting the riddle alone into an AI still fails.
+            You always get the answers up front.
           </p>
           <div className="cta-row">
-            <button type="button" className="btn primary" onClick={nextRiddle}>
-              {spinning ? 'Spinning…' : 'Generate a new riddle'}
+            <button type="button" className="btn primary" onClick={next}>
+              {spinning ? 'Forging…' : 'Generate a hard riddle'}
             </button>
           </div>
         </div>
@@ -53,48 +75,84 @@ export default function App() {
 
       <section className={`machine ${spinning ? 'is-spinning' : ''}`}>
         <div className="machine-card riddle-card">
-          <p className="card-label">Riddle</p>
-          <p className="riddle-text">{riddle.prompt}</p>
-          <button
-            type="button"
-            className="btn small"
-            onClick={() => copy('riddle', riddle.prompt)}
-          >
-            {copied === 'riddle' ? 'Copied' : 'Copy riddle'}
-          </button>
+          <p className="card-label">The puzzle</p>
+          <h2 className="riddle-title">{puzzle.riddle.title}</h2>
+          <pre className="riddle-text">{puzzle.riddle.prompt}</pre>
+          <div className="btn-row">
+            <button
+              type="button"
+              className="btn small"
+              onClick={() => copy('riddle', shareableRiddleText(puzzle))}
+            >
+              {copied === 'riddle' ? 'Copied' : 'Copy riddle only'}
+            </button>
+            <button
+              type="button"
+              className="btn small"
+              onClick={() => copy('full', fullChallengeText(puzzle))}
+            >
+              {copied === 'full' ? 'Copied' : 'Copy full challenge'}
+            </button>
+          </div>
+          <p className="fine">
+            “Copy riddle only” is the AI trap version — no precision lock
+            included.
+          </p>
         </div>
 
+        <LockStamp instruction={puzzle.lock.instruction} code={puzzle.lock.code} />
+
         <div className="machine-card answer-card">
-          <p className="card-label">Answer</p>
-          <p className="answer-text">{riddle.answer}</p>
-          {riddle.hint && <p className="hint-text">Hint if you need it: {riddle.hint}</p>}
+          <p className="card-label">Your answers (host only)</p>
+          <div className="answer-grid">
+            <div>
+              <p className="answer-sub">Core solve</p>
+              <p className="answer-text core">{puzzle.coreAnswer}</p>
+            </div>
+            <div>
+              <p className="answer-sub">Final answer after the lock</p>
+              <p className="answer-text final">{puzzle.finalAnswer}</p>
+            </div>
+          </div>
+          <div className="btn-row">
+            <button
+              type="button"
+              className="btn small"
+              onClick={() => copy('final', puzzle.finalAnswer)}
+            >
+              {copied === 'final' ? 'Copied' : 'Copy final answer'}
+            </button>
+            <button
+              type="button"
+              className="btn small"
+              onClick={() => copy('core', puzzle.coreAnswer)}
+            >
+              {copied === 'core' ? 'Copied' : 'Copy core solve'}
+            </button>
+          </div>
+
           <button
             type="button"
-            className="btn small"
-            onClick={() => copy('answer', riddle.answer)}
+            className="linkish"
+            onClick={() => setShowHostNotes((v) => !v)}
           >
-            {copied === 'answer' ? 'Copied' : 'Copy answer'}
+            {showHostNotes ? 'Hide' : 'Show'} why this is hard
           </button>
+          {showHostNotes && <p className="host-note">{puzzle.riddle.whyHard}</p>}
         </div>
 
         <div className="machine-actions">
-          <button type="button" className="btn primary" onClick={nextRiddle}>
+          <button type="button" className="btn primary" onClick={next}>
             Generate another
-          </button>
-          <button
-            type="button"
-            className="btn ghost"
-            onClick={() =>
-              copy('both', `Riddle:\n${riddle.prompt}\n\nAnswer:\n${riddle.answer}`)
-            }
-          >
-            {copied === 'both' ? 'Copied' : 'Copy both'}
           </button>
         </div>
       </section>
 
       <footer className="footer">
-        <p>Hit generate whenever you want a fresh hard riddle — answer included.</p>
+        <p>
+          Give people the full challenge (riddle + precision lock). If they only
+          feed an AI the riddle block, the lock still breaks them.
+        </p>
       </footer>
     </div>
   )
