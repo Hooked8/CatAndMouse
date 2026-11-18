@@ -13,7 +13,7 @@
   const cartDrawer = document.getElementById("cart-drawer");
 
   let activeCategory = null;
-  let activeSub = "all";
+  let activeSub = null;
   let activeProduct = null;
   let cart = [];
 
@@ -29,11 +29,25 @@
   function parseRoute() {
     const hash = location.hash.replace(/^#/, "") || "home";
     if (hash.startsWith("category/")) {
-      const id = hash.split("/")[1];
-      return { view: "category", categoryId: id };
+      const parts = hash.split("/");
+      return {
+        view: "category",
+        categoryId: parts[1] || null,
+        subId: parts[2] || null,
+      };
     }
     if (hash === "models") return { view: "home", scroll: "models" };
     return { view: "home" };
+  }
+
+  function categoryHasHub(cat) {
+    return Boolean(cat?.hub);
+  }
+
+  function defaultSub(cat) {
+    if (!cat) return null;
+    if (categoryHasHub(cat)) return null;
+    return cat.subs?.[0]?.id || "all";
   }
 
   function setRoute(hash) {
@@ -90,21 +104,101 @@
       </article>`;
   }
 
-  function renderCategory() {
-    if (!activeCategory) return;
-    const cat = categories.find((c) => c.id === activeCategory);
-    if (!cat) return;
+  function renderClothingHub(cat) {
+    const back = document.querySelector("[data-category-back]");
+    if (back) {
+      back.dataset.nav = "models";
+      back.textContent = "← Models";
+    }
 
     document.querySelector("[data-category-hero]").src = cat.image;
     document.querySelector("[data-category-title]").textContent = cat.name;
     document.querySelector("[data-category-desc]").textContent = cat.blurb;
 
-    subnav.innerHTML = cat.subs
-      .map(
-        (s) =>
-          `<button type="button" data-sub="${s.id}" class="${s.id === activeSub ? "is-active" : ""}">${s.label}</button>`
-      )
-      .join("");
+    if (subnav) {
+      subnav.hidden = true;
+      subnav.innerHTML = "";
+    }
+
+    const note = document.querySelector("[data-preview-note]");
+    if (note) note.hidden = true;
+
+    categoryGrid.classList.add("is-hub");
+    categoryGrid.innerHTML = `
+      <div class="models-head hub-head">
+        <img class="mini-crest" src="/images/brand/achilles-crest.png" alt="" width="40" height="40" />
+        <p class="eyebrow">Clothing</p>
+        <h2>Choose your piece.</h2>
+        <p class="viii-bar">← VIII →</p>
+      </div>
+      <div class="model-stack hub-stack">
+        ${cat.subs
+          .map(
+            (s, i) => `
+          <button class="model-card" type="button" data-open-sub="${s.id}" style="animation-delay:${i * 0.04}s">
+            <img src="${s.image}" alt="" loading="lazy" width="1200" height="800" />
+            <div class="model-copy">
+              <h3>${s.label}.</h3>
+              <p>${s.blurb || ""}</p>
+            </div>
+            <span class="model-go" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M8 5l8 7-8 7"/></svg>
+            </span>
+          </button>`
+          )
+          .join("")}
+      </div>`;
+  }
+
+  function renderCategory() {
+    if (!activeCategory) return;
+    const cat = categories.find((c) => c.id === activeCategory);
+    if (!cat) return;
+
+    if (categoryHasHub(cat) && !activeSub) {
+      renderClothingHub(cat);
+      return;
+    }
+
+    const activeSubMeta = (cat.subs || []).find((s) => s.id === activeSub);
+    const back = document.querySelector("[data-category-back]");
+    if (back) {
+      if (categoryHasHub(cat)) {
+        back.dataset.nav = "category";
+        back.dataset.category = cat.id;
+        back.textContent = `← ${cat.name.replace(".", "")}`;
+      } else {
+        back.dataset.nav = "models";
+        delete back.dataset.category;
+        back.textContent = "← Models";
+      }
+    }
+
+    document.querySelector("[data-category-hero]").src =
+      activeSubMeta?.image || cat.image;
+    document.querySelector("[data-category-title]").textContent =
+      activeSubMeta?.label ? `${activeSubMeta.label}.` : cat.name;
+    document.querySelector("[data-category-desc]").textContent =
+      activeSubMeta?.blurb || cat.blurb;
+
+    const note = document.querySelector("[data-preview-note]");
+    if (note) note.hidden = false;
+
+    categoryGrid.classList.remove("is-hub");
+
+    const navSubs = categoryHasHub(cat)
+      ? cat.subs
+      : cat.subs;
+
+    if (subnav) {
+      subnav.hidden = false;
+      subnav.innerHTML = navSubs
+        .map(
+          (s) =>
+            `<button type="button" data-sub="${s.id}" class="${s.id === activeSub ? "is-active" : ""}">${s.label}</button>`
+        )
+        .join("");
+    }
 
     const subOrder = Object.fromEntries(
       (cat.subs || []).map((s, i) => [s.id, i])
@@ -112,7 +206,7 @@
     const list = products
       .filter((p) => {
         if (p.category !== activeCategory) return false;
-        if (activeSub === "all") return true;
+        if (activeSub === "all" || !activeSub) return true;
         return p.sub === activeSub;
       })
       .sort((a, b) => {
@@ -126,7 +220,7 @@
       categoryGrid.innerHTML = `
         <div class="empty-state">
           <img class="mini-crest" src="/images/brand/achilles-crest.png" alt="" width="40" height="40" style="margin:0 auto 0.75rem" />
-          <p>More ${cat.name.replace(".", "")} pieces are coming in with the next photo drop.</p>
+          <p>More ${(activeSubMeta?.label || cat.name).replace(".", "")} pieces are coming in with the next photo drop.</p>
         </div>`;
       return;
     }
@@ -159,9 +253,22 @@
     }
   }
 
-  function showCategory(id) {
+  function showCategory(id, subId) {
+    const cat = categories.find((c) => c.id === id);
+    if (!cat) {
+      showHome();
+      return;
+    }
+
     activeCategory = id;
-    activeSub = "all";
+    if (categoryHasHub(cat)) {
+      const valid = (cat.subs || []).some((s) => s.id === subId);
+      activeSub = valid ? subId : null;
+    } else {
+      const valid = (cat.subs || []).some((s) => s.id === subId);
+      activeSub = valid ? subId : defaultSub(cat);
+    }
+
     homeView.hidden = true;
     homeView.classList.remove("is-active");
     categoryView.hidden = false;
@@ -175,7 +282,7 @@
     closeDrawer();
     if (route.view === "category") {
       const exists = categories.some((c) => c.id === route.categoryId);
-      if (exists) showCategory(route.categoryId);
+      if (exists) showCategory(route.categoryId, route.subId);
       else showHome();
       return;
     }
@@ -325,6 +432,12 @@
       return;
     }
 
+    const openSub = e.target.closest("[data-open-sub]");
+    if (openSub && activeCategory) {
+      setRoute(`category/${activeCategory}/${openSub.dataset.openSub}`);
+      return;
+    }
+
     const listing = e.target.closest(".listing");
     if (listing) {
       const product = products.find((p) => p.id === listing.dataset.id);
@@ -334,7 +447,12 @@
 
   subnav?.addEventListener("click", (e) => {
     const btn = e.target.closest("[data-sub]");
-    if (!btn) return;
+    if (!btn || !activeCategory) return;
+    const cat = categories.find((c) => c.id === activeCategory);
+    if (categoryHasHub(cat)) {
+      setRoute(`category/${activeCategory}/${btn.dataset.sub}`);
+      return;
+    }
     activeSub = btn.dataset.sub;
     renderCategory();
   });
