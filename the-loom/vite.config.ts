@@ -4,6 +4,13 @@ import { defineConfig } from 'vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  // GitHub Pages project site: https://hooked8.github.io/CatAndMouse/the-loom/
-  base: '/CatAndMouse/the-loom/',
+  base: '/',
+  preview: {
+    host: '127.0.0.1',
+    allowedHosts: true,
+  },
+  server: {
+    host: '127.0.0.1',
+    allowedHosts: true,
+  },
 })
