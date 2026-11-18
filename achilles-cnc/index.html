@@ -34,9 +34,6 @@
       width: min(720px, 100%);
       margin: 0 auto;
       padding: 28px 18px 64px;
-      padding-left: max(18px, env(safe-area-inset-left));
-      padding-right: max(18px, env(safe-area-inset-right));
-      padding-bottom: max(64px, env(safe-area-inset-bottom));
     }
     .brand {
       font-family: "Bebas Neue", sans-serif;
@@ -155,107 +152,89 @@
       background: rgba(255,255,255,0.03);
     }
     .note strong { color: var(--ink); font-weight: 600; }
-    .steps {
-      margin: 0 0 28px;
-      padding: 0 0 0 1.2rem;
-      color: var(--muted);
-      font-size: 0.95rem;
-      line-height: 1.55;
-    }
-    .steps li { margin-bottom: 0.45rem; }
-    .steps strong { color: var(--ink); }
   </style>
 </head>
 <body>
   <main class="wrap">
-    <div class="pill">Utah Tech · Stinger · Fusion 360</div>
+    <div class="pill">CNC · Laser · Phone download</div>
     <h1 class="brand">ACHILLES</h1>
-    <p class="sub">Download on iPhone → AirDrop to MacBook → open in Fusion 360 → cut on the Stinger.</p>
+    <p class="sub">Tap download on your phone, then AirDrop / share the SVG or DXF into LightBurn, Fusion, Carbide, or VCarve.</p>
 
-    <a class="hero-btn" href="https://github.com/Hooked8/CatAndMouse/releases/download/achilles-cnc-v1/achilles-cnc-ready.zip">
-      Download all CNC files (ZIP)
+    <a class="hero-btn" href="https://cdn.jsdelivr.net/gh/Hooked8/CatAndMouse@gh-pages/achilles-cnc/files/achilles-cnc-ready.zip" download="achilles-cnc-ready.zip">
+      Download all new files (ZIP)
     </a>
-    <a class="hero-btn secondary" href="https://github.com/Hooked8/CatAndMouse/releases/download/achilles-cnc-v1/ACHILLES_CNC_Fusion360_Pack.zip">
-      Stinger / Fusion ZIP (8.5&quot; deep V-carve)
+    <a class="hero-btn secondary" href="https://cdn.jsdelivr.net/gh/Hooked8/CatAndMouse@gh-pages/achilles-cnc/files/achilles-deck-underside-ENGRAVE.svg" download="achilles-deck-underside-ENGRAVE.svg">
+      Download main SVG now
     </a>
-
-    <h2 class="section-title">iPhone → Mac → CNC</h2>
-    <ol class="steps">
-      <li>Tap a <strong>ZIP</strong> above and save it in Files.</li>
-      <li>Share → <strong>AirDrop</strong> to your MacBook.</li>
-      <li>On Mac open <strong>Fusion 360</strong> (not Diffusion).</li>
-      <li>Import the SVG · units = inches (or mm for the underside pack).</li>
-      <li>Manufacture → V-carve / Engrave → post to <strong>WinCNC / Stinger III</strong>.</li>
-    </ol>
 
     <h2 class="section-title">Full underside monogram</h2>
     <div class="list">
       <article class="card">
         <h3>Full deck ENGRAVE (SVG)</h3>
-        <a class="dl primary" href="https://github.com/Hooked8/CatAndMouse/releases/download/achilles-cnc-v1/achilles-deck-underside-ENGRAVE.svg">SVG</a>
+        <a class="dl primary" href="https://cdn.jsdelivr.net/gh/Hooked8/CatAndMouse@gh-pages/achilles-cnc/files/achilles-deck-underside-ENGRAVE.svg" download>SVG</a>
         <p>Primary — 813×210 mm underside. LightBurn / LaserGRBL.</p>
       </article>
       <article class="card">
         <h3>Full deck ENGRAVE (DXF)</h3>
-        <a class="dl primary" href="https://github.com/Hooked8/CatAndMouse/releases/download/achilles-cnc-v1/achilles-deck-underside-ENGRAVE.dxf">DXF</a>
+        <a class="dl primary" href="https://cdn.jsdelivr.net/gh/Hooked8/CatAndMouse@gh-pages/achilles-cnc/files/achilles-deck-underside-ENGRAVE.dxf" download>DXF</a>
         <p>Same layout for Carbide Create / VCarve / Fusion.</p>
       </article>
       <article class="card">
         <h3>Center logo only</h3>
-        <a class="dl" href="files/achilles-center-logo.svg" download>SVG</a>
+        <a class="dl" href="https://cdn.jsdelivr.net/gh/Hooked8/CatAndMouse@gh-pages/achilles-cnc/files/achilles-center-logo.svg" download>SVG</a>
         <p>Wreath · Λ · Eye · ACHILLES · VIII</p>
       </article>
       <article class="card">
         <h3>Center logo (DXF)</h3>
-        <a class="dl" href="files/achilles-center-logo.dxf" download>DXF</a>
+        <a class="dl" href="https://cdn.jsdelivr.net/gh/Hooked8/CatAndMouse@gh-pages/achilles-cnc/files/achilles-center-logo.dxf" download>DXF</a>
         <p>Center medallion DXF</p>
       </article>
       <article class="card">
         <h3>Symbol library</h3>
-        <a class="dl" href="files/achilles-symbol-library.svg" download>SVG</a>
+        <a class="dl" href="https://cdn.jsdelivr.net/gh/Hooked8/CatAndMouse@gh-pages/achilles-cnc/files/achilles-symbol-library.svg" download>SVG</a>
         <p>Ankh, Eye, scarab, lotus, Bastet, falcon, numerals…</p>
       </article>
       <article class="card">
         <h3>Setup guide</h3>
-        <a class="dl" href="files/CNC-READY.md" download>MD</a>
+        <a class="dl" href="https://cdn.jsdelivr.net/gh/Hooked8/CatAndMouse@gh-pages/achilles-cnc/files/CNC-READY.md" download>MD</a>
         <p>Machine settings starting point</p>
       </article>
     </div>
 
     <h2 class="section-title">Layout preview</h2>
     <div class="preview">
-      <img src="preview/deck.png" alt="Full deck engrave toolpath preview" />
+      <img src="https://cdn.jsdelivr.net/gh/Hooked8/CatAndMouse@gh-pages/achilles-cnc/preview/deck.png" alt="Full deck engrave toolpath preview" />
     </div>
     <div class="preview">
-      <img src="preview/logo.png" alt="Center logo toolpath preview" />
+      <img src="https://cdn.jsdelivr.net/gh/Hooked8/CatAndMouse@gh-pages/achilles-cnc/preview/logo.png" alt="Center logo toolpath preview" />
     </div>
     <div class="preview">
-      <img src="preview/library.png" alt="Symbol library preview" />
+      <img src="https://cdn.jsdelivr.net/gh/Hooked8/CatAndMouse@gh-pages/achilles-cnc/preview/library.png" alt="Symbol library preview" />
     </div>
 
-    <h2 class="section-title">Stinger / Fusion 8.5&quot; deep V-carve</h2>
+    <h2 class="section-title">Earlier Stinger / Fusion pack</h2>
     <div class="list">
       <article class="card">
         <h3>Fusion ZIP pack</h3>
-        <a class="dl primary" href="https://github.com/Hooked8/CatAndMouse/releases/download/achilles-cnc-v1/ACHILLES_CNC_Fusion360_Pack.zip">ZIP</a>
-        <p>SVG + DXF + setup notes for Utah Tech Stinger III</p>
+        <a class="dl" href="https://cdn.jsdelivr.net/gh/Hooked8/CatAndMouse@gh-pages/achilles-cnc/files/ACHILLES_CNC_Fusion360_Pack.zip" download>ZIP</a>
+        <p>Previous 8.5" deep V-carve Stinger pack</p>
       </article>
       <article class="card">
-        <h3>8.5&quot; Deep V-carve SVG</h3>
-        <a class="dl primary" href="https://github.com/Hooked8/CatAndMouse/releases/download/achilles-cnc-v1/ACHILLES_8.5in_DeepVCarve_Stinger_Fusion360.svg">SVG</a>
-        <p>Import this into Fusion 360</p>
+        <h3>8.5" Deep V-carve SVG</h3>
+        <a class="dl" href="https://cdn.jsdelivr.net/gh/Hooked8/CatAndMouse@gh-pages/achilles-cnc/files/ACHILLES_8.5in_DeepVCarve_Stinger_Fusion360.svg" download>SVG</a>
+        <p>Utah Tech Stinger III file</p>
       </article>
       <article class="card">
-        <h3>8.5&quot; Deep V-carve DXF</h3>
-        <a class="dl" href="https://github.com/Hooked8/CatAndMouse/releases/download/achilles-cnc-v1/ACHILLES_8.5in_DeepVCarve_Stinger_Fusion360.dxf">DXF</a>
+        <h3>8.5" Deep V-carve DXF</h3>
+        <a class="dl" href="https://cdn.jsdelivr.net/gh/Hooked8/CatAndMouse@gh-pages/achilles-cnc/files/ACHILLES_8.5in_DeepVCarve_Stinger_Fusion360.dxf" download>DXF</a>
         <p>Backup for Fusion / VCarve</p>
       </article>
     </div>
 
     <div class="note">
       <strong>Where to cut:</strong> underside only (truck side). Grip tape covers the top.<br />
-      <strong>iPhone:</strong> tap Download → Share → AirDrop to Mac → open in Fusion 360.<br />
-      <strong>Stinger bit:</strong> 60° V-bit · depth 0.125–0.1875 in · post to WinCNC / CAMaster.
+      <strong>iPhone:</strong> tap Download → Share → AirDrop to Mac → open in LightBurn or Fusion.<br />
+      In LightBurn: import SVG → delete gray guides → Line Engrave → scrap-test maple first.
     </div>
   </main>
 </body>
