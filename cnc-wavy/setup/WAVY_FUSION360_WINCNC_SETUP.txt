@@ -1,0 +1,63 @@
+ACHILLES WAVY CNC — Utah Tech Atwood Makerspace
+Machine: CAMaster Stinger III
+CAD/CAM: Fusion 360 (what Utah Tech staff use)
+Controller: WinCNC (post from Fusion)
+
+Board size: 8.5" wide × 32.0" long (inches)
+Carve side: UNDERSIDE (truck side) — grip tape covers the top
+
+============================================================
+FILES IN THIS PACK
+============================================================
+svg/*.svg     — Import into Fusion Design (Insert → SVG). Units = inches.
+dxf/*.dxf     — Backup vectors for Fusion / VCarve.
+stl/*_3Drelief.stl — True 3D wavy surface for Fusion Manufacture 3D → Parallel.
+heightmaps/*_heightmap.png — Optional Mesh → Create Mesh from Heightmap.
+previews/*_toolpath-preview.png — Line preview of what the vectors contain.
+
+Designs:
+01  Topographic waves + labyrinth / pinecone + ACHILLES
+02  Diamond grip + Λ wreath + ACHILLES VIII
+03  Sand-dune waves + Spartan crest + ACHILLES
+04  Sand-dune waves + Eye of Horus + ACHILLES
+05  Sand-dune waves + open laurel + ACHILLES
+06  Braided Greek-key waves with eye nodes + lattice
+07  Honeycomb field + Spartan helmet
+
+============================================================
+FUSION 360 → WINCNC (Stinger III) — EXACT FLOW
+============================================================
+1) Open Fusion 360 on a Makerspace PC (or your Mac).
+2) New Design. Units: Inches.
+3) Create → Box: 32.0" × 8.5" × 0.4" (or your blank thickness).
+4) Insert → SVG (or DXF): pick one design from svg/.
+   - Scale: 1 SVG unit = 1 inch (check board is 32.0" long).
+   - Position on the top face of the stock.
+5) FOR THE WAVY 3D RELIEF (best look):
+   a) Insert Mesh → the matching *_3Drelief.stl
+   b) Align mesh to the deck face.
+   c) Manufacture → 3D → Parallel (or Scallop)
+      Tool: 1/8" or 1/4" ball nose
+      Stepover: 8–12% of tool diameter
+      Max depth / containment: deck outline
+   d) Then 2D → Trace / Engrave OR V-Carve the logo+text SVG on top
+      Tool: 60° V-bit (or 90° if that's what's loaded)
+      Depth: 0.08"–0.14" into the already-waved surface
+6) FOR FASTER 2.5D ONLY (no STL):
+   - Manufacture → 2D Contour or Trace on all wave lines + logos
+   - 60° V-bit, depth 0.10"–0.16"
+   - Waves will read as carved grooves (still wavy, less “dune” 3D)
+
+7) Post process:
+   Manufacture → Actions → Post Process
+   Post: WinCNC  (or “CAMaster ATC with WinCNC” if ATC)
+   Output: .tap / .nc
+8) Copy the posted file to the Stinger PC → open in WinCNC → run.
+
+============================================================
+STARTING SPEEDS (soft maple / birch blank — verify with staff)
+============================================================
+Ball nose 1/8": 16–18k RPM, feed 40–70 ipm, stepdown 0.04"
+V-bit 60°:      16–18k RPM, feed 25–45 ipm, depth 0.10"–0.14"
+Always scrap-test a corner first. Ask makerspace staff before first cut.
+Contact: makerspace@utahtech.edu · 435-879-4532
