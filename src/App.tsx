@@ -6,6 +6,7 @@ import {
   wornGallery,
   type Shell,
 } from "./data";
+import { sportCategories, sportWorn } from "./sports";
 
 const allSelectable = [...shells, ...moreShields];
 
@@ -30,6 +31,7 @@ export default function App() {
         <nav className="nav">
           <a href="#strap">Strap</a>
           <a href="#shells">Shields</a>
+          <a href="#sports">Sports</a>
           <a href="#worn">Worn</a>
           <a href="#system">System</a>
         </nav>
@@ -40,6 +42,7 @@ export default function App() {
         <StrapSection />
         <ShellsSection active={active} onSelect={setActiveId} />
         <MoreBoardSection activeId={activeId} onSelect={setActiveId} />
+        <SportsLineSection />
         <WornSection shell={active} />
         <WornGallerySection />
         <SystemSection />
@@ -281,6 +284,66 @@ function WornSection({ shell }: { shell: Shell }) {
       </div>
     </section>
   );
+}
+
+function SportsLineSection() {
+  const [catId, setCatId] = useState(sportCategories[0].id);
+  const cat =
+    sportCategories.find((c) => c.id === catId) ?? sportCategories[0];
+
+  return (
+    <section className="section sports" id="sports">
+      <div className="section-head">
+        <H2Sports />
+        <p>
+          Same aspis language across the mountain and the park — Greek-key rim,
+          swapped center marks on boards, lids, and goggles.
+        </p>
+      </div>
+
+      <div className="shell-picker" role="tablist" aria-label="Sport lines">
+        {sportCategories.map((c, i) => (
+          <button
+            key={c.id}
+            role="tab"
+            aria-selected={c.id === cat.id}
+            className={c.id === cat.id ? "shell-tab active" : "shell-tab"}
+            onClick={() => setCatId(c.id)}
+            style={{ animationDelay: `${i * 40}ms` }}
+          >
+            <span className="shell-tab-name">{c.title}</span>
+          </button>
+        ))}
+      </div>
+
+      <p className="sports-blurb">{cat.blurb}</p>
+
+      <div className="sports-grid" key={cat.id}>
+        {cat.items.map((item) => (
+          <figure key={item.id} className="sports-card">
+            <img src={item.image} alt={`${item.name} — ${item.mark}`} />
+            <figcaption>
+              <strong>{item.name}</strong>
+              <span>{item.mark}</span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+
+      <div className="sport-worn-row">
+        {sportWorn.map((shot) => (
+          <figure key={shot.src} className="gallery-card">
+            <img src={shot.src} alt={shot.label} />
+            <figcaption>{shot.label}</figcaption>
+          </figure>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function H2Sports() {
+  return <h2>Mountain · park line</h2>;
 }
 
 function WornGallerySection() {

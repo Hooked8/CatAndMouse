@@ -506,6 +506,57 @@ a {
   padding: 0;
 }
 
+.sports-blurb {
+  margin: 0 0 1.5rem;
+  max-width: 40rem;
+  color: var(--ink-soft);
+}
+
+.sports-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 2rem;
+  animation: crossfade 0.45s var(--ease) both;
+}
+
+.sports-card {
+  margin: 0;
+}
+
+.sports-card img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: contain;
+  background: #e8eef4;
+  padding: 0.4rem;
+}
+
+.sports-card figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin-top: 0.5rem;
+}
+
+.sports-card strong {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.sports-card span {
+  font-size: 0.72rem;
+  color: var(--mute);
+}
+
+.sport-worn-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
 .worn-gallery {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -723,7 +774,8 @@ a {
     grid-template-columns: 1fr;
   }
 
-  .worn-gallery {
+  .worn-gallery,
+  .sport-worn-row {
     grid-template-columns: repeat(2, 1fr);
   }
 
