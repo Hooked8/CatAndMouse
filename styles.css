@@ -658,6 +658,10 @@ select {
   margin-bottom: 1.5rem;
 }
 
+.subnav[hidden] {
+  display: none;
+}
+
 .subnav button {
   border: 1px solid rgba(255, 255, 255, 0.14);
   background: rgba(255, 255, 255, 0.04);
@@ -686,6 +690,20 @@ select {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.35rem 1.15rem;
   align-items: stretch;
+}
+
+.product-grid.is-hub {
+  display: block;
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.hub-head {
+  margin-bottom: 1.25rem;
+}
+
+.hub-stack {
+  margin-top: 0.25rem;
 }
 
 .listing {
