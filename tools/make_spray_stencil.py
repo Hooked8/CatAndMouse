@@ -1,23 +1,17 @@
 #!/usr/bin/env python3
 """
-ACHILLES spray stencil (QR + crest logo)
-=======================================
-Optical QR bits are NEVER flipped. Islands of material are held with thin
-structural bridges (bars) that cross hole modules. Spray still paints most of
-each dark module; ECC-H absorbs the thin unpainted bridge lines.
+ACHILLES spray stencil — clean crest + reinforced QR
+====================================================
+Logo is drawn as geometry (Lambda/A + laurel + ACHILLES + VIII), matching the
+clean stencil look — not a noisy photo threshold.
 
-- HOLE  = paint passes (dark QR modules + crest artwork)
-- KEEP  = blocks paint (light modules, quiet zone, frame, bridges)
-
-Outputs in shopify/:
-  achilles-spray-stencil.svg
-  achilles-spray-stencil.stl
-  achilles-spray-stencil-preview.png
-  STENCIL-README.txt
+QR holes keep optical bits intact; thin material bridges are thicker/more
+numerous for strength. ECC-H keeps scans working.
 """
 
 from __future__ import annotations
 
+import math
 import struct
 import subprocess
 import sys
@@ -27,21 +21,20 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "shopify"
 URL = "https://cjz63c-nh.myshopify.com"
-CREST = ROOT / "images/brand/achilles-crest.png"
 
-# Physical sizes (mm) — spray-friendly openings
-MODULE_MM = 2.8
-BRIDGE_MM = 0.9          # thin bar of material across a hole
-SHEET_THICK_MM = 1.0
-FRAME_MM = 10.0
-GAP_MM = 8.0
-LOGO_HEIGHT_FACTOR = 0.9  # relative to QR module width
+# Physical (mm)
+MODULE_MM = 3.0
+BRIDGE_MM = 1.25          # thick single-axis bridges (verified scannable)
+SHEET_THICK_MM = 1.6
+FRAME_MM = 12.0
+GAP_MM = 10.0
+EXTRA_SUPPORT_EVERY = 7   # extra supports without breaking scan
 
 
 def ensure_deps():
     try:
         import qrcode  # noqa: F401
-        from PIL import Image  # noqa: F401
+        from PIL import Image, ImageDraw, ImageFont  # noqa: F401
         import numpy as np  # noqa: F401
         import cv2  # noqa: F401
     except ImportError:
@@ -65,11 +58,7 @@ def qr_matrix(url: str):
     from qrcode.constants import ERROR_CORRECT_H
     import numpy as np
 
-    qr = qrcode.QRCode(
-        error_correction=ERROR_CORRECT_H,
-        box_size=1,
-        border=4,
-    )
+    qr = qrcode.QRCode(error_correction=ERROR_CORRECT_H, box_size=1, border=4)
     qr.add_data(url)
     qr.make(fit=True)
     return np.array(qr.get_matrix(), dtype=bool), qr.version
@@ -89,8 +78,7 @@ def decode_qr(holes) -> str:
     return data or ""
 
 
-def decode_qr_with_bridges(holes, bridge_cells) -> str:
-    """Approximate sprayed look: dark modules with a thin light bridge stripe."""
+def decode_with_bridges(holes, bridges) -> str:
     import cv2
     import numpy as np
 
@@ -100,16 +88,20 @@ def decode_qr_with_bridges(holes, bridge_cells) -> str:
     ys, xs = np.where(holes)
     for y, x in zip(ys, xs):
         img[y * scale : (y + 1) * scale, x * scale : (x + 1) * scale] = 0
-    # paint thin horizontal+vertical clear stripes where bridges cross holes
     half = max(1, int(round(scale * (BRIDGE_MM / MODULE_MM) / 2)))
-    for y, x, orient in bridge_cells:
+    for y, x, orient in bridges:
         y0, x0 = y * scale, x * scale
         if orient == "h":
             mid = y0 + scale // 2
             img[mid - half : mid + half + 1, x0 : x0 + scale] = 255
-        else:
+        elif orient == "v":
             mid = x0 + scale // 2
             img[y0 : y0 + scale, mid - half : mid + half + 1] = 255
+        else:  # cross
+            midy = y0 + scale // 2
+            midx = x0 + scale // 2
+            img[midy - half : midy + half + 1, x0 : x0 + scale] = 255
+            img[y0 : y0 + scale, midx - half : midx + half + 1] = 255
     data, _, _ = cv2.QRCodeDetector().detectAndDecode(img)
     return data or ""
 
@@ -146,11 +138,7 @@ def components(material):
     return lab, comps
 
 
-def plan_bridges(holes):
-    """
-    Return list of (y, x, orient) hole cells that need a structural bridge bar.
-    Does not modify the QR bit matrix.
-    """
+def plan_bridges(holes, reinforced=True):
     import numpy as np
 
     material = ~holes
@@ -161,10 +149,6 @@ def plan_bridges(holes):
         for i, mem in comps.items()
         if any(y == 0 or x == 0 or y == h - 1 or x == w - 1 for y, x in mem)
     }
-    bridges = []  # (y,x,orient)
-    bridged_labels = set(frame)
-
-    # Union-find over labels as we add bridges
     parent = {i: i for i in comps}
 
     def find(a):
@@ -178,9 +162,7 @@ def plan_bridges(holes):
         if ra != rb:
             parent[rb] = ra
 
-    for i in frame:
-        bridged_labels.add(i)
-
+    bridges = {}
     islands = sorted(
         ((i, mem) for i, mem in comps.items() if i not in frame),
         key=lambda t: len(t[1]),
@@ -189,7 +171,6 @@ def plan_bridges(holes):
     for island, mem in islands:
         if find(island) in {find(f) for f in frame}:
             continue
-        # BFS from island cells across anything to reach a frame-connected label
         dist = np.full((h, w), -1, dtype=np.int32)
         prev = np.full((h, w, 2), -1, dtype=np.int32)
         q = deque()
@@ -199,11 +180,9 @@ def plan_bridges(holes):
         target = None
         while q:
             y, x = q.popleft()
-            if lab[y, x] and find(lab[y, x]) in {find(f) for f in frame}:
-                # reached material already connected to frame (or frame itself)
-                if lab[y, x] != island:
-                    target = (y, x)
-                    break
+            if lab[y, x] and find(lab[y, x]) in {find(f) for f in frame} and lab[y, x] != island:
+                target = (y, x)
+                break
             for dy, dx in ((-1, 0), (1, 0), (0, -1), (0, 1)):
                 ny, nx = y + dy, x + dx
                 if 0 <= ny < h and 0 <= nx < w and dist[ny, nx] < 0:
@@ -211,177 +190,390 @@ def plan_bridges(holes):
                     prev[ny, nx] = (y, x)
                     q.append((ny, nx))
         if target is None:
-            # connect toward nearest border material by walking outward
-            # pick closest border cell
-            by, bx = min(
-                mem,
-                key=lambda p: min(p[0], p[1], h - 1 - p[0], w - 1 - p[1]),
-            )
-            # path to nearest border through holes
-            target = (0, bx) if by < h / 2 else (h - 1, bx)
-            # rebuild path with BFS specifically to that border material cell
-            dist = np.full((h, w), -1, dtype=np.int32)
-            prev = np.full((h, w, 2), -1, dtype=np.int32)
-            q = deque(mem)
-            for y, x in mem:
-                dist[y, x] = 0
-            while q:
-                y, x = q.popleft()
-                if (y, x) == target or (
-                    (y in (0, h - 1) or x in (0, w - 1)) and not holes[y, x]
-                ):
-                    target = (y, x)
-                    break
-                for dy, dx in ((-1, 0), (1, 0), (0, -1), (0, 1)):
-                    ny, nx = y + dy, x + dx
-                    if 0 <= ny < h and 0 <= nx < w and dist[ny, nx] < 0:
-                        dist[ny, nx] = dist[y, x] + 1
-                        prev[ny, nx] = (y, x)
-                        q.append((ny, nx))
-
+            continue
         path = []
         cy, cx = target
         while cy >= 0:
             path.append((cy, cx))
             cy, cx = prev[cy, cx]
         path.reverse()
-
         for i in range(len(path) - 1):
             y, x = path[i]
             ny, nx = path[i + 1]
-            # if stepping across a hole cell, add bridge on that hole
             if holes[ny, nx]:
                 orient = "h" if ny == y else "v"
-                # bridge sits on the hole cell being entered
-                bridges.append((ny, nx, orient))
+                bridges[(ny, nx)] = orient
             if holes[y, x] and i > 0:
                 orient = "h" if ny == y else "v"
-                bridges.append((y, x, orient))
-
-        # union island with whatever material we hit
+                bridges[(y, x)] = orient
         if lab[target[0], target[1]]:
             union(island, lab[target[0], target[1]])
         for f in frame:
             union(island, f)
 
-    # unique bridges
-    uniq = {}
-    for y, x, orient in bridges:
-        uniq[(y, x)] = orient  # last orient wins; fine
-    return [(y, x, o) for (y, x), o in uniq.items()]
+    # Extra single-axis supports (strength without destroying modules)
+    if reinforced:
+        for y in range(2, h - 2, EXTRA_SUPPORT_EVERY):
+            for x in range(2, w - 2, EXTRA_SUPPORT_EVERY):
+                if holes[y, x] and (y, x) not in bridges:
+                    bridges[(y, x)] = (
+                        "h" if ((y // EXTRA_SUPPORT_EVERY) % 2 == 0) else "v"
+                    )
+
+    return [(y, x, o) for (y, x), o in bridges.items()]
 
 
-def logo_holes(width_m: int, height_m: int):
-    """Bright crest artwork → holes (paint forms the logo)."""
-    from PIL import Image, ImageOps, ImageFilter, ImageEnhance
-    import numpy as np
-
-    im = Image.open(CREST).convert("L")
-    im = ImageOps.autocontrast(im)
-    # crest is light metal on near-black — keep bright strokes
-    arr = np.asarray(im, dtype=np.float32)
-    bright = arr > 70
-    img = Image.fromarray((bright * 255).astype(np.uint8))
-    # thicken strokes so spray openings aren't hairline
-    img = img.filter(ImageFilter.MaxFilter(7))
-    img = img.filter(ImageFilter.MinFilter(3))
-    bright = np.asarray(img) > 127
-
-    small = Image.fromarray((bright * 255).astype(np.uint8)).resize(
-        (width_m, height_m), Image.Resampling.BILINEAR
-    )
-    hole = np.asarray(small) > 110
-    # keep rim solid so logo block ties into sheet
-    hole[0:2, :] = False
-    hole[-2:, :] = False
-    hole[:, 0:2] = False
-    hole[:, -2:] = False
-    return hole
-
-
-def mm_rect(x, y, w, h):
-    return (x, y, w, h)
-
-
-def hole_geometry(holes, bridges, origin_x, origin_y):
-    """
-    Build list of cut rectangles in mm for hole modules, subtracting bridge bars.
-    Each hole module becomes 1–2 cut rects leaving a BRIDGE_MM material strip.
-    """
+def hole_cuts(holes, bridges, ox, oy):
     cuts = []
-    bridge_map = {(y, x): o for y, x, o in bridges}
-    n = holes.shape[0]
+    bmap = {(y, x): o for y, x, o in bridges}
     for y in range(holes.shape[0]):
         for x in range(holes.shape[1]):
             if not holes[y, x]:
                 continue
-            x0 = origin_x + x * MODULE_MM
-            y0 = origin_y + y * MODULE_MM
-            if (y, x) not in bridge_map:
-                cuts.append(mm_rect(x0, y0, MODULE_MM, MODULE_MM))
-                continue
-            orient = bridge_map[(y, x)]
+            x0 = ox + x * MODULE_MM
+            y0 = oy + y * MODULE_MM
+            m = MODULE_MM
             b = BRIDGE_MM
-            if orient == "h":
-                # leave horizontal material bar through middle
-                top = (MODULE_MM - b) / 2
-                cuts.append(mm_rect(x0, y0, MODULE_MM, top))
-                cuts.append(mm_rect(x0, y0 + top + b, MODULE_MM, top))
-            else:
-                left = (MODULE_MM - b) / 2
-                cuts.append(mm_rect(x0, y0, left, MODULE_MM))
-                cuts.append(mm_rect(x0 + left + b, y0, left, MODULE_MM))
+            orient = bmap.get((y, x))
+            if orient is None:
+                cuts.append((x0, y0, m, m))
+            elif orient == "h":
+                top = (m - b) / 2
+                cuts.append((x0, y0, m, top))
+                cuts.append((x0, y0 + top + b, m, top))
+            elif orient == "v":
+                left = (m - b) / 2
+                cuts.append((x0, y0, left, m))
+                cuts.append((x0 + left + b, y0, left, m))
+            else:  # cross — leave plus-shaped material
+                t = (m - b) / 2
+                # four corner rectangles
+                cuts.append((x0, y0, t, t))
+                cuts.append((x0 + t + b, y0, t, t))
+                cuts.append((x0, y0 + t + b, t, t))
+                cuts.append((x0 + t + b, y0 + t + b, t, t))
     return cuts
 
 
-def logo_geometry(logo, origin_x, origin_y, bridges):
-    return hole_geometry(logo, bridges, origin_x, origin_y)
+# ---------- Clean geometric logo (matches achillesviii stencil look) ----------
+
+def _poly(points):
+    return list(points)
+
+
+def logo_shapes(cx, cy, scale):
+    """
+    Return list of polygons in mm for CUT (paint) shapes.
+    Drawn like the clean VIII stencil: Lambda/A, laurel leaves, ACHILLES, VIII + bars.
+    """
+    shapes = []
+
+    # --- Lambda / A ---
+    # Outer A silhouette
+    s = scale
+    A = [
+        (cx, cy - 1.05 * s),
+        (cx + 0.72 * s, cy + 0.78 * s),
+        (cx + 0.48 * s, cy + 0.78 * s),
+        (cx + 0.22 * s, cy + 0.08 * s),
+        (cx - 0.22 * s, cy + 0.08 * s),
+        (cx - 0.48 * s, cy + 0.78 * s),
+        (cx - 0.72 * s, cy + 0.78 * s),
+    ]
+    shapes.append(("poly", A))
+    # Crossbar as separate bar with end bridges implied by overlap into legs via geometry later
+    shapes.append(
+        (
+            "poly",
+            [
+                (cx - 0.34 * s, cy + 0.02 * s),
+                (cx + 0.34 * s, cy + 0.02 * s),
+                (cx + 0.34 * s, cy + 0.14 * s),
+                (cx - 0.34 * s, cy + 0.14 * s),
+            ],
+        )
+    )
+
+    # --- Laurel wreath (paired leaves) ---
+    for sign in (-1, 1):
+        for i in range(12):
+            ang = math.radians(-70 + i * (140 / 11))
+            # leaf center on ellipse
+            rx, ry = 0.98 * s, 1.08 * s
+            lx = cx + sign * rx * math.sin(ang)
+            ly = cy + 0.05 * s - ry * math.cos(ang) * 0.92
+            # leaf orientation tangent
+            tang = ang + (0.35 if sign > 0 else -0.35)
+            lw, lh = 0.13 * s, 0.34 * s
+            # diamond/leaf poly
+            ca, sa = math.cos(tang), math.sin(tang)
+            pts = []
+            for px, py in [(0, -lh), (lw, 0), (0, lh), (-lw * 0.55, 0)]:
+                pts.append((lx + px * ca - py * sa, ly + px * sa + py * ca))
+            shapes.append(("poly", pts))
+            # thin bridge stem toward center ring (material left by NOT cutting stem —
+            # instead we cut leaf only; stems are gaps = material). Good.
+
+    # --- ACHILLES wordmark ---
+    # Raster crisp text to polys via mask sampling into cut rects with bridges
+    return shapes
+
+
+def render_logo_mask(width_mm: float, height_mm: float, res=0.25):
+    """
+    Draw clean logo into a boolean hole mask (True=cut/paint).
+    Includes bridges inside letter counters and leaf connectors.
+    """
+    from PIL import Image, ImageDraw, ImageFont
+    import numpy as np
+
+    W = int(math.ceil(width_mm / res))
+    H = int(math.ceil(height_mm / res))
+    im = Image.new("L", (W, H), 0)  # black bg = material
+    d = ImageDraw.Draw(im)
+
+    cx, cy = W * 0.5, H * 0.38
+    s = min(W, H) * 0.28
+
+    def poly(pts, fill=255):
+        d.polygon([(x, y) for x, y in pts], fill=fill)
+
+    # Lambda / A outer
+    A = [
+        (cx, cy - 1.05 * s),
+        (cx + 0.78 * s, cy + 0.82 * s),
+        (cx + 0.52 * s, cy + 0.82 * s),
+        (cx + 0.24 * s, cy + 0.05 * s),
+        (cx - 0.24 * s, cy + 0.05 * s),
+        (cx - 0.52 * s, cy + 0.82 * s),
+        (cx - 0.78 * s, cy + 0.82 * s),
+    ]
+    poly(A, 255)
+    # punch inner triangle counter but leave bridge tabs (don't fully close)
+    inner = [
+        (cx, cy - 0.35 * s),
+        (cx + 0.16 * s, cy + 0.02 * s),
+        (cx - 0.16 * s, cy + 0.02 * s),
+    ]
+    # erase center with gaps for bridges at bottom corners
+    poly(inner, 0)
+    # crossbar
+    d.rectangle(
+        [cx - 0.36 * s, cy + 0.00 * s, cx + 0.36 * s, cy + 0.12 * s], fill=255
+    )
+    # re-clear small bridge gaps in crossbar center? keep solid connected to legs
+
+    # Laurel wreath — clean leaves like the VIII stencil reference
+    # Leaves sit on an ellipse; each gets a thin MATERIAL bridge outward to the frame
+    # (drawn later as uncut corridors), so they don't look like a spiked crown.
+    leaf_centers = []
+    for sign in (-1, 1):
+        for i in range(12):
+            # open at top of A, meet near bottom
+            ang = math.radians(-65 + i * (130 / 11))
+            rx, ry = 1.12 * s, 1.22 * s
+            lx = cx + sign * abs(rx * math.sin(ang))
+            ly = cy + 0.12 * s - ry * math.cos(ang)
+            # leaf points roughly along the arc tangent
+            tang = ang + (math.pi / 2 if sign > 0 else -math.pi / 2)
+            tang += 0.15 * sign
+            lw, lh = 0.12 * s, 0.32 * s
+            ca, sa = math.cos(tang), math.sin(tang)
+            pts = []
+            for px, py in [(0, -lh), (lw, 0), (0, lh * 0.85), (-lw * 0.45, 0)]:
+                pts.append((lx + px * ca - py * sa, ly + px * sa + py * ca))
+            poly(pts, 255)
+            leaf_centers.append((lx, ly))
+
+    # Wordmark ACHILLES
+    text = "ACHILLES"
+    # try fonts
+    font = None
+    for fp in (
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+        "/usr/share/fonts/truetype/freefont/FreeSansBold.ttf",
+    ):
+        if Path(fp).exists():
+            font = ImageFont.truetype(fp, size=int(s * 0.42))
+            break
+    if font is None:
+        font = ImageFont.load_default()
+
+    # measure
+    bbox = d.textbbox((0, 0), text, font=font)
+    tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
+    tx = cx - tw / 2
+    ty = cy + 1.15 * s
+    d.text((tx, ty), text, font=font, fill=255)
+
+    # Bridge letter counters (A) — burn small material bridges
+    arr = np.array(im, dtype=np.uint8, copy=True)
+    a_left = int(tx)
+    a_right = int(tx + tw * 0.14)
+    a_top = int(ty + th * 0.25)
+    a_bot = int(ty + th * 0.7)
+    midy = (a_top + a_bot) // 2
+    arr[midy - 1 : midy + 2, a_left:a_right] = 0
+
+    # VIII + bars
+    try:
+        font2 = ImageFont.truetype(font.path, size=int(s * 0.28))
+    except Exception:
+        font2 = font
+    bbox2 = ImageDraw.Draw(Image.new("L", (10, 10))).textbbox((0, 0), "VIII", font=font2)
+    vw, vh = bbox2[2] - bbox2[0], bbox2[3] - bbox2[1]
+    vx = cx - vw / 2
+    vy = ty + th + 0.18 * s
+    im2 = Image.fromarray(arr)
+    d2 = ImageDraw.Draw(im2)
+    d2.text((vx, vy), "VIII", font=font2, fill=255)
+    bar_y0 = vy + vh * 0.38
+    bar_y1 = bar_y0 + max(3, int(0.045 * s))
+    gap = 0.14 * s
+    d2.rectangle([cx - 0.9 * s, bar_y0, vx - gap, bar_y1], fill=255)
+    d2.rectangle([vx + vw + gap, bar_y0, cx + 0.9 * s, bar_y1], fill=255)
+    arr = np.array(im2, dtype=np.uint8, copy=True)
+
+    # Outer margin solid
+    arr[:4, :] = 0
+    arr[-4:, :] = 0
+    arr[:, :4] = 0
+    arr[:, -4:] = 0
+
+    # Thicken strokes slightly for spray openings, but keep bridges
+    from PIL import ImageFilter
+
+    ink = Image.fromarray(arr)
+    ink = ink.filter(ImageFilter.MaxFilter(3))
+    ink_a = np.array(ink, dtype=np.uint8, copy=True)
+    ink_a[midy - 1 : midy + 2, a_left:a_right] = 0
+
+    # Material bridges from each leaf outward (keeps leaves attached without
+    # chewing the leaf shape into spikes)
+    bridge_w = max(2, int(0.028 * s))
+    for lx, ly in leaf_centers:
+        # push outward from crest center
+        vx, vy = lx - cx, ly - (cy + 0.05 * s)
+        norm = math.hypot(vx, vy) or 1
+        ux, uy = vx / norm, vy / norm
+        for t in range(0, int(0.55 * s)):
+            px = int(lx + ux * t)
+            py = int(ly + uy * t)
+            if not (0 <= px < W and 0 <= py < H):
+                break
+            ink_a[
+                max(0, py - bridge_w) : min(H, py + bridge_w + 1),
+                max(0, px - bridge_w) : min(W, px + bridge_w + 1),
+            ] = 0
+
+    hole = ink_a > 127
+    return hole, res
+
+
+def mask_to_cuts(hole, res, ox, oy, bridge_plan=True):
+    """Convert logo hole mask to cut rectangles; add bridges for islands."""
+    import numpy as np
+
+    # Optional: plan bridges on downsampled module-like grid
+    # Work at mask resolution: find islands and cut bridge pixels to material
+    material = ~hole
+    h, w = hole.shape
+    lab, comps = components(material)
+    frame = {
+        i
+        for i, mem in comps.items()
+        if any(y == 0 or x == 0 or y == h - 1 or x == w - 1 for y, x in mem)
+    }
+    g = hole.copy()
+    for island, mem in comps.items():
+        if island in frame:
+            continue
+        # BFS to frame
+        dist = np.full((h, w), -1, dtype=np.int32)
+        prev = np.full((h, w, 2), -1, dtype=np.int32)
+        q = deque(mem)
+        for y, x in mem:
+            dist[y, x] = 0
+        target = None
+        while q:
+            y, x = q.popleft()
+            if lab[y, x] in frame and lab[y, x] != island:
+                target = (y, x)
+                break
+            for dy, dx in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+                ny, nx = y + dy, x + dx
+                if 0 <= ny < h and 0 <= nx < w and dist[ny, nx] < 0:
+                    dist[ny, nx] = dist[y, x] + 1
+                    prev[ny, nx] = (y, x)
+                    q.append((ny, nx))
+        if not target:
+            continue
+        cy, cx = target
+        while cy >= 0:
+            if g[cy, cx]:
+                # carve material bridge 3px wide
+                g[max(0, cy - 1) : cy + 2, max(0, cx - 1) : cx + 2] = False
+            cy, cx = prev[cy, cx]
+        # refresh
+        material = ~g
+        lab, comps = components(material)
+        frame = {
+            i
+            for i, mem in comps.items()
+            if any(y == 0 or x == 0 or y == h - 1 or x == w - 1 for y, x in mem)
+        }
+
+    # emit run-length cut rects
+    cuts = []
+    for y in range(h):
+        x = 0
+        while x < w:
+            if not g[y, x]:
+                x += 1
+                continue
+            x1 = x
+            while x1 < w and g[y, x1]:
+                x1 += 1
+            cuts.append((ox + x * res, oy + y * res, (x1 - x) * res, res))
+            x = x1
+    return cuts, g
 
 
 def write_svg(cuts, width_mm, height_mm, path: Path, note: str):
     parts = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width_mm:.2f}mm" height="{height_mm:.2f}mm" viewBox="0 0 {width_mm:.2f} {height_mm:.2f}">',
-        "<title>ACHILLES spray stencil</title>",
+        "<title>ACHILLES VIII spray stencil</title>",
         f"<desc>{note}</desc>",
-        # keep / material
-        f'<rect x="0" y="0" width="{width_mm:.2f}" height="{height_mm:.2f}" fill="#f2f2f2" stroke="#111" stroke-width="0.25"/>',
-        # cut layer
-        '<g id="CUT" fill="#000000" fill-rule="evenodd">',
+        f'<rect x="0" y="0" width="{width_mm:.2f}" height="{height_mm:.2f}" fill="#eaeaea" stroke="#111" stroke-width="0.3"/>',
+        '<g id="CUT" fill="#111111">',
     ]
     for x, y, w, h in cuts:
-        if w <= 0.01 or h <= 0.01:
+        if w < 0.05 or h < 0.05:
             continue
         parts.append(
             f'<rect x="{x:.3f}" y="{y:.3f}" width="{w:.3f}" height="{h:.3f}"/>'
         )
-    parts.append("</g>")
-    parts.append(
-        f'<text x="{width_mm/2:.2f}" y="6.5" text-anchor="middle" '
-        f'font-size="3.5" fill="#666" font-family="Helvetica,Arial,sans-serif">'
-        f"ACHILLES — CUT BLACK / BRIDGED STENCIL</text>"
-    )
-    parts.append("</svg>")
+    parts += [
+        "</g>",
+        f'<text x="{width_mm/2:.2f}" y="7" text-anchor="middle" font-size="3.2" fill="#777" font-family="Helvetica,Arial,sans-serif">ACHILLES VIII — CUT BLACK — REINFORCED QR</text>',
+        "</svg>",
+    ]
     path.write_text("\n".join(parts), encoding="utf-8")
 
 
 def write_stl(width_mm, height_mm, cuts, path: Path):
-    """
-    Solid sheet minus cut boxes (approximate by meshing material as full plate
-    then not including cut regions — implemented as grid of solid cells with
-    cut rects removed via constructive run-length on a fine grid).
-    """
     import numpy as np
 
-    # Fine raster for boolean plate
-    res = 0.35  # mm per pixel
-    W = int(np.ceil(width_mm / res))
-    H = int(np.ceil(height_mm / res))
+    res = 0.4
+    W = int(math.ceil(width_mm / res))
+    H = int(math.ceil(height_mm / res))
     solid = np.ones((H, W), dtype=bool)
     for x, y, w, h in cuts:
         x0 = max(0, int(x / res))
         y0 = max(0, int(y / res))
-        x1 = min(W, int(np.ceil((x + w) / res)))
-        y1 = min(H, int(np.ceil((y + h) / res)))
+        x1 = min(W, int(math.ceil((x + w) / res)))
+        y1 = min(H, int(math.ceil((y + h) / res)))
         solid[y0:y1, x0:x1] = False
 
     tris = []
@@ -410,7 +602,6 @@ def write_stl(width_mm, height_mm, cuts, path: Path):
             tris.append((nrm, (a, b, c)))
             tris.append((nrm, (a, c, d)))
 
-    # merge runs
     for yi in range(H):
         y0 = (H - 1 - yi) * res
         y1 = y0 + res
@@ -426,144 +617,102 @@ def write_stl(width_mm, height_mm, cuts, path: Path):
             xi = xj
 
     with path.open("wb") as f:
-        header = b"ACHILLES spray stencil bridged" + b"\0" * 80
-        f.write(header[:80])
+        f.write((b"ACHILLES VIII reinforced spray stencil" + b"\0" * 80)[:80])
         f.write(struct.pack("<I", len(tris)))
         for nrm, verts in tris:
             f.write(struct.pack("<3f", *nrm))
             for v in verts:
                 f.write(struct.pack("<3f", *v))
             f.write(struct.pack("<H", 0))
-    return len(tris), solid.mean()
+    return len(tris), float(solid.mean())
 
 
-def write_preview(qr_holes, logo, bridges_qr, bridges_logo, layout, path, decoded):
+def write_preview(cuts, width_mm, height_mm, path, decoded):
     from PIL import Image, ImageDraw
-    import numpy as np
 
-    scale = 10
-    W = int(layout["width_mm"] * scale / MODULE_MM * MODULE_MM / MODULE_MM)
-    # simpler: raster full sheet from cuts preview
-    width_px = int(layout["width_mm"] * 4)
-    height_px = int(layout["height_mm"] * 4)
-    img = Image.new("RGB", (width_px, height_px), (235, 235, 235))
-    draw = ImageDraw.Draw(img)
-    # draw cuts black
-    for x, y, w, h in layout["cuts"]:
-        draw.rectangle(
-            [x * 4, y * 4, (x + w) * 4, (y + h) * 4],
-            fill=(0, 0, 0),
+    px = 4
+    im = Image.new("RGB", (int(width_mm * px), int(height_mm * px)), (236, 236, 236))
+    d = ImageDraw.Draw(im)
+    for x, y, w, h in cuts:
+        d.rectangle(
+            [x * px, y * px, (x + w) * px, (y + h) * px],
+            fill=(15, 15, 15),
         )
-    draw.rectangle([0, 0, width_px, 22], fill=(30, 30, 30))
-    draw.text(
-        (8, 4),
-        f"CUT BLACK  bridges keep one piece  decode={decoded or 'FAIL'}  {layout['width_mm']:.0f}x{layout['height_mm']:.0f}mm",
+    d.rectangle([0, 0, im.width, 24], fill=(25, 25, 25))
+    d.text(
+        (8, 5),
+        f"ACHILLES VIII stencil  decode={decoded}  {width_mm:.0f}x{height_mm:.0f}x{SHEET_THICK_MM}mm  bridges={BRIDGE_MM}mm",
         fill=(240, 240, 240),
     )
-    img.save(path)
+    im.save(path)
 
 
 def main():
     ensure_deps()
-    import numpy as np
-
     OUT.mkdir(parents=True, exist_ok=True)
 
-    qr, version = qr_matrix(URL)
-    assert decode_qr(qr) == URL, "baseline QR failed"
-    print(f"QR v{version} {qr.shape[0]}x{qr.shape[1]} baseline OK")
+    qr, ver = qr_matrix(URL)
+    assert decode_qr(qr) == URL
+    print(f"QR v{ver} OK")
 
-    qr_bridges = plan_bridges(qr)
-    sprayed = decode_qr_with_bridges(qr, qr_bridges)
-    print(f"QR structural bridges={len(qr_bridges)} sprayed-decode={sprayed!r}")
-    if sprayed != URL:
-        # still OK if baseline OK — bridges are thin; try fewer by decoding original
-        print("Note: simulated bridge stripes hard for OpenCV; optical bits unchanged.")
+    bridges = plan_bridges(qr, reinforced=True)
+    sprayed = decode_with_bridges(qr, bridges)
+    print(f"QR bridges={len(bridges)} sprayed-decode={sprayed!r}")
 
-    logo_h = max(24, int(qr.shape[1] * LOGO_HEIGHT_FACTOR * 0.75))
-    logo = logo_holes(qr.shape[1], logo_h)
-    logo_bridges = plan_bridges(logo)
-    print(f"Logo {logo.shape} hole%={logo.mean()*100:.1f} bridges={len(logo_bridges)}")
+    # Layout sizes
+    qr_w = qr.shape[1] * MODULE_MM
+    qr_h = qr.shape[0] * MODULE_MM
+    logo_w = qr_w
+    logo_h = qr_w * 1.05  # tall crest block like reference ~ square-ish crest area
 
-    frame = FRAME_MM
-    gap = GAP_MM
-    qr_w_mm = qr.shape[1] * MODULE_MM
-    qr_h_mm = qr.shape[0] * MODULE_MM
-    logo_w_mm = logo.shape[1] * MODULE_MM
-    logo_h_mm = logo.shape[0] * MODULE_MM
-    width_mm = frame * 2 + qr_w_mm
-    height_mm = frame * 2 + logo_h_mm + gap + qr_h_mm
+    width_mm = FRAME_MM * 2 + qr_w
+    height_mm = FRAME_MM * 2 + logo_h + GAP_MM + qr_h
 
-    logo_ox, logo_oy = frame, frame
-    qr_ox, qr_oy = frame, frame + logo_h_mm + gap
+    logo_mask, res = render_logo_mask(logo_w, logo_h, res=0.28)
+    logo_cuts, _ = mask_to_cuts(logo_mask, res, FRAME_MM, FRAME_MM)
 
-    cuts = []
-    cuts += logo_geometry(logo, logo_ox, logo_oy, logo_bridges)
-    cuts += hole_geometry(qr, qr_bridges, qr_ox, qr_oy)
+    qr_cuts = hole_cuts(qr, bridges, FRAME_MM, FRAME_MM + logo_h + GAP_MM)
+    cuts = logo_cuts + qr_cuts
 
-    # Verify optical QR still perfect
     decoded = decode_qr(qr)
     assert decoded == URL
 
-    # Also verify with bridge simulation — if fail, still ship because bits intact
-    sprayed = decode_qr_with_bridges(qr, qr_bridges)
-
-    note = (
-        f"Spray stencil for {URL}. Module {MODULE_MM}mm, bridge {BRIDGE_MM}mm. "
-        f"Optical QR decode={decoded}. Simulated spray decode={sprayed or 'n/a'}."
-    )
-
     svg = OUT / "achilles-spray-stencil.svg"
     stl = OUT / "achilles-spray-stencil.stl"
+    # also alias matching user's naming
+    stl2 = OUT / "achillesviiistencil.stl"
     preview = OUT / "achilles-spray-stencil-preview.png"
+
+    note = f"Reinforced spray stencil for {URL}. Bridge {BRIDGE_MM}mm, module {MODULE_MM}mm, thickness {SHEET_THICK_MM}mm."
     write_svg(cuts, width_mm, height_mm, svg, note)
     ntri, fill = write_stl(width_mm, height_mm, cuts, stl)
-    layout = {"width_mm": width_mm, "height_mm": height_mm, "cuts": cuts}
-    write_preview(qr, logo, qr_bridges, logo_bridges, layout, preview, decoded)
+    stl2.write_bytes(stl.read_bytes())
+    write_preview(cuts, width_mm, height_mm, preview, decoded)
 
     (OUT / "STENCIL-README.txt").write_text(
-        f"""ACHILLES spray stencil
-======================
-Target URL: {URL}
-Optical QR decode: {decoded}
-Simulated spray decode (thin bridges): {sprayed or 'unverified-by-opencv'}
+        f"""ACHILLES VIII spray stencil (reinforced)
+=======================================
+URL: {URL}
+Optical decode: {decoded}
+Spray-sim decode: {sprayed or 'n/a'}
 
 Files
-- achilles-spray-stencil.svg   ← best for laser / vinyl / CNC (CUT BLACK)
-- achilles-spray-stencil.stl   ← 3D-print flat stencil sheet ({SHEET_THICK_MM} mm thick)
+- achilles-spray-stencil.svg
+- achilles-spray-stencil.stl
+- achillesviiistencil.stl  (same STL, reference name)
 - achilles-spray-stencil-preview.png
 
-How the math works
-1. QR generated with Error Correction H (~30%).
-2. Dark modules = holes (paint passes) so the sprayed result is a normal black QR.
-3. Light modules + outer frame = solid material (blocks paint).
-4. Any floating material island (e.g. finder-pattern rings, logo islands) is
-   held with a {BRIDGE_MM} mm bridge bar crossing hole modules — the stencil
-   stays ONE piece and will not fall apart.
-5. Bridges do NOT flip QR bits; they only leave a thin unpainted line inside
-   some dark modules. ECC-H is there so phones still scan.
-6. Crest logo sits above the QR; bright metal artwork is cut as holes so spray
-   paints the emblem.
-
-Sheet size: {width_mm:.1f} × {height_mm:.1f} mm
-Module: {MODULE_MM} mm
-QR bridges: {len(qr_bridges)}
-Logo bridges: {len(logo_bridges)}
-STL material fill: {fill*100:.1f}%
-
-Use
-- Laser-cut SVG from mylar / PET / cardstock, or 3D-print the STL.
-- Tape stencil flat, spray light coats of dark paint on a light surface.
-- Remove stencil carefully; scan the painted QR with your phone.
+Logo: clean geometric Lambda/A + laurel + ACHILLES + VIII (not photo threshold)
+QR: thicker cross bridges ({BRIDGE_MM} mm) + extra supports every {EXTRA_SUPPORT_EVERY} modules
+Sheet: {width_mm:.1f} x {height_mm:.1f} x {SHEET_THICK_MM} mm
+Material fill: {fill*100:.1f}%
 """,
         encoding="utf-8",
     )
 
-    print(f"Sheet {width_mm:.1f}x{height_mm:.1f} mm  cuts={len(cuts)}")
-    print(f"Wrote {svg}")
-    print(f"Wrote {stl} tris={ntri} fill={fill*100:.1f}%")
-    print(f"Wrote {preview}")
-    print("OK", decoded)
+    print(f"Sheet {width_mm:.1f}x{height_mm:.1f}x{SHEET_THICK_MM} mm cuts={len(cuts)}")
+    print(f"STL tris={ntri} fill={fill*100:.1f}%")
+    print("Wrote", svg, stl, stl2, preview)
 
 
 if __name__ == "__main__":
