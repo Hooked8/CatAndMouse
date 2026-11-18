@@ -125,7 +125,7 @@
     if (!list.length) {
       categoryGrid.innerHTML = `
         <div class="empty-state">
-          <img class="mini-crest" src="/images/brand/achilles-crest.png" alt="" width="40" height="40" style="margin:0 auto 0.75rem" />
+          <img class="mini-crest" src="images/brand/achilles-crest.png" alt="" width="40" height="40" style="margin:0 auto 0.75rem" />
           <p>More ${cat.name.replace(".", "")} pieces are coming in with the next photo drop.</p>
         </div>`;
       return;
