@@ -115,7 +115,7 @@
     if (!list.length) {
       categoryGrid.innerHTML = `
         <div class="empty-state">
-          <img class="mini-crest" src="/images/brand/achilles-crest.jpg" alt="" width="40" height="40" style="margin:0 auto 0.75rem" />
+          <img class="mini-crest" src="/images/brand/achilles-crest.png" alt="" width="40" height="40" style="margin:0 auto 0.75rem" />
           <p>More ${cat.name.replace(".", "")} pieces are coming in with the next photo drop.</p>
         </div>`;
       return;
@@ -339,6 +339,11 @@
   window.addEventListener("hashchange", applyRoute);
   window.addEventListener("scroll", () => {
     header?.classList.toggle("is-solid", window.scrollY > 24);
+    const studio = document.querySelector(".gear-studio");
+    if (studio && !homeView.hidden) {
+      const y = Math.min(40, window.scrollY * 0.08);
+      studio.style.transform = `translate(-50%, calc(-54% + ${y}px))`;
+    }
   });
 
   renderModels();
