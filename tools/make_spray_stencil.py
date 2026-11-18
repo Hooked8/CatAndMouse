@@ -363,24 +363,25 @@ def render_logo_mask(width_mm: float, height_mm: float, res=0.25):
     )
     # re-clear small bridge gaps in crossbar center? keep solid connected to legs
 
-    # Laurel wreath — clean leaves like the VIII stencil reference
-    # Leaves sit on an ellipse; each gets a thin MATERIAL bridge outward to the frame
-    # (drawn later as uncut corridors), so they don't look like a spiked crown.
+    # Laurel wreath — paired classic leaves around the A (open at top)
     leaf_centers = []
     for sign in (-1, 1):
-        for i in range(12):
-            # open at top of A, meet near bottom
-            ang = math.radians(-65 + i * (130 / 11))
-            rx, ry = 1.12 * s, 1.22 * s
-            lx = cx + sign * abs(rx * math.sin(ang))
-            ly = cy + 0.12 * s - ry * math.cos(ang)
-            # leaf points roughly along the arc tangent
-            tang = ang + (math.pi / 2 if sign > 0 else -math.pi / 2)
-            tang += 0.15 * sign
-            lw, lh = 0.12 * s, 0.32 * s
+        for i in range(11):
+            t = i / 10  # 0..1 along branch
+            # angle from bottom meeting point up toward top opening
+            ang = math.radians(-40 + t * 95)  # up the side
+            rx, ry = 1.08 * s, 1.18 * s
+            lx = cx + sign * rx * math.sin(ang)
+            ly = cy + 0.55 * s - ry * (0.15 + 0.85 * math.cos(math.radians(t * 85)))
+            # leaf long axis follows branch direction
+            tang = math.atan2(
+                -ry * 0.85 * math.sin(math.radians(t * 85)) * (85 * math.pi / 180) / 10,
+                sign * rx * math.cos(ang) * (95 * math.pi / 180) / 10,
+            )
+            lw, lh = 0.105 * s, 0.30 * s
             ca, sa = math.cos(tang), math.sin(tang)
             pts = []
-            for px, py in [(0, -lh), (lw, 0), (0, lh * 0.85), (-lw * 0.45, 0)]:
+            for px, py in [(0, -lh), (lw, -0.05 * lh), (0, lh), (-lw * 0.4, -0.05 * lh)]:
                 pts.append((lx + px * ca - py * sa, ly + px * sa + py * ca))
             poly(pts, 255)
             leaf_centers.append((lx, ly))

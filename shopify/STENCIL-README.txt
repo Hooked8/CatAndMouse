@@ -13,4 +13,4 @@ Files
 Logo: clean geometric Lambda/A + laurel + ACHILLES + VIII (not photo threshold)
 QR: thicker cross bridges (1.25 mm) + extra supports every 7 modules
 Sheet: 147.0 x 286.1 x 1.6 mm
-Material fill: 80.6%
+Material fill: 81.5%
