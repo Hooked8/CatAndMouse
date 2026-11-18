@@ -339,10 +339,10 @@
   window.addEventListener("hashchange", applyRoute);
   window.addEventListener("scroll", () => {
     header?.classList.toggle("is-solid", window.scrollY > 24);
-    const studio = document.querySelector(".gear-studio");
-    if (studio && !homeView.hidden) {
-      const y = Math.min(40, window.scrollY * 0.08);
-      studio.style.transform = `translate(-50%, calc(-54% + ${y}px))`;
+    const bg = document.querySelector(".hero-bg");
+    if (bg && !homeView.hidden) {
+      const y = Math.min(28, window.scrollY * 0.06);
+      bg.style.translate = `0 ${y}px`;
     }
   });
 
