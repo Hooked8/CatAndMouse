@@ -1,11 +1,13 @@
-# Achilles
+# ACHILLES
 
-A cinematic tribute site for Achilles, the Homeric hero of the Trojan War.
+Athletic apparel, boards, protection, and accessories shop preview.
 
-## Local
+## Run locally
 
 ```bash
-python3 -m http.server 4173 --bind 127.0.0.1
+npm start
 ```
 
-Open http://127.0.0.1:4173
+Open [http://127.0.0.1:4173](http://127.0.0.1:4173).
+
+Preview catalog only — Shopify checkout connects when you go live.

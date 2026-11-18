@@ -5,148 +5,242 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Achilles — the greatest warrior of the Trojan War. A legend forged in bronze and salt."
+      content="ACHILLES — athletic apparel, boards, and gear. Built for water, snow, and street."
     />
-    <title>Achilles</title>
+    <title>ACHILLES</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
-    <a class="skip" href="#legend">Skip to content</a>
+    <a class="skip" href="#shop">Skip to shop</a>
 
-    <header class="site-nav">
-      <a class="nav-brand" href="#top" aria-label="Achilles home">Achilles</a>
-      <nav aria-label="Primary">
-        <a href="#legend">Legend</a>
-        <a href="#war">War</a>
-        <a href="#heel">Heel</a>
-      </nav>
+    <header class="site-header">
+      <div class="header-inner">
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Open menu">
+          <span></span><span></span>
+        </button>
+
+        <a class="logo" href="#top" aria-label="ACHILLES home">
+          <svg class="mark mark-eye" viewBox="0 0 64 40" aria-hidden="true">
+            <path
+              fill="currentColor"
+              d="M32 6c-12 0-22 8-28 14 6 6 16 14 28 14s22-8 28-14C54 14 44 6 32 6zm0 22a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-5a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM8 18l6-2-2 4-4-2zm48 0l-6-2 2 4 4-2zM20 30l-3 6h4l2-4 2 4h4l-3-6h-6z"
+            />
+          </svg>
+          <span class="logo-word">ACHILLES</span>
+        </a>
+
+        <nav id="site-menu" class="site-nav" aria-label="Shop">
+          <a href="#shop" data-filter="all">Shop</a>
+          <a href="#shop" data-filter="apparel">Apparel</a>
+          <a href="#shop" data-filter="boards">Boards</a>
+          <a href="#shop" data-filter="protection">Protection</a>
+          <a href="#shop" data-filter="accessories">Accessories</a>
+          <a href="#marks">Marks</a>
+        </nav>
+
+        <button class="cart-btn" type="button" aria-label="Open cart">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              d="M4 6h2l2.2 10.2a1 1 0 0 0 1 .8h8.4a1 1 0 0 0 1-.8L20 8H8"
+            />
+            <circle cx="10" cy="20" r="1.2" fill="currentColor" />
+            <circle cx="17" cy="20" r="1.2" fill="currentColor" />
+          </svg>
+          <span class="cart-count" data-cart-count>0</span>
+        </button>
+      </div>
     </header>
 
     <main id="top">
-      <section class="hero" aria-label="Achilles">
+      <section class="hero" aria-label="ACHILLES">
         <div class="hero-media" aria-hidden="true">
           <img
             class="hero-image"
-            src="https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=2400&q=80"
+            src="/images/products/hoodie-leopard-front.jpg"
             alt=""
-            width="2400"
-            height="1600"
+            width="1200"
+            height="1500"
             fetchpriority="high"
           />
           <div class="hero-veil"></div>
         </div>
-
         <div class="hero-content">
-          <p class="brand">Achilles</p>
-          <h1>Forged for one war. Remembered for eternity.</h1>
+          <p class="brand">ACHILLES</p>
+          <h1>Built for impact. Marked for legend.</h1>
           <p class="lede">
-            Son of a goddess and a king — the swiftest, fiercest blade of the
-            Achaean host.
+            Apparel, wakeboards, snowboards, skis, and gear — framed the ACHILLES way.
           </p>
           <div class="cta-row">
-            <a class="cta" href="#legend">Enter the legend</a>
-            <a class="cta cta-ghost" href="#war">The Trojan War</a>
+            <a class="cta" href="#shop">Shop the drop</a>
+            <a class="cta cta-ghost" href="#marks">See the marks</a>
           </div>
         </div>
       </section>
 
-      <section id="legend" class="section legend">
+      <section id="marks" class="marks-section">
         <div class="section-inner">
-          <p class="eyebrow">The making</p>
-          <h2>Born between two worlds</h2>
+          <p class="eyebrow">Brand system</p>
+          <h2>Symbols & marks</h2>
           <p class="section-copy">
-            Achilles was the son of Peleus, king of the Myrmidons, and Thetis, a
-            sea nymph who dipped him in the river Styx. Where her fingers held
-            him, the water never touched — and a single vulnerability remained.
+            These marks show up across product graphics, listing cards, and the menu. Preview only — more photos still coming in.
           </p>
-
-          <figure class="scene">
-            <img
-              src="https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1800&q=80"
-              alt="Sunlit white cliffs and deep blue Aegean water"
-              width="1800"
-              height="1200"
-              loading="lazy"
-            />
-            <figcaption>The wine-dark sea that raised a demigod.</figcaption>
-          </figure>
-        </div>
-      </section>
-
-      <section id="war" class="section war">
-        <div class="section-inner wide">
-          <p class="eyebrow">The Iliad</p>
-          <h2>Rage that shook Troy</h2>
-          <p class="section-copy">
-            Homer’s poem opens with Achilles’ wrath — a quarrel with Agamemnon
-            that withdrew the greatest warrior from battle, and set the fate of
-            cities in motion.
-          </p>
-
-          <ul class="moments">
-            <li class="moment reveal">
-              <span class="moment-mark">01</span>
-              <h3>The quarrel</h3>
-              <p>
-                Honor stripped, he withdraws to his ships. Without him, the
-                Achaeans bleed.
-              </p>
+          <ul class="marks-grid">
+            <li class="mark-card">
+              <svg viewBox="0 0 80 48" aria-hidden="true">
+                <path
+                  fill="currentColor"
+                  d="M40 6c-16 0-28 10-36 18 8 8 20 18 36 18s28-10 36-18C68 16 56 6 40 6zm0 28a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-6a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 22l8-3-3 5-5-2zm64 0l-8-3 3 5 5-2zM24 38l-4 8h5l3-5 3 5h5l-4-8h-8z"
+                />
+              </svg>
+              <h3>Eye of Horus</h3>
+              <p>Card footer mark · protection</p>
             </li>
-            <li class="moment reveal">
-              <span class="moment-mark">02</span>
-              <h3>Patroclus falls</h3>
-              <p>
-                His closest companion wears Achilles’ armor into battle — and
-                does not return.
-              </p>
+            <li class="mark-card">
+              <svg viewBox="0 0 64 64" aria-hidden="true">
+                <path
+                  fill="currentColor"
+                  d="M32 4c-2 8-8 12-14 14 8 1 12 6 14 12 2-6 6-11 14-12-6-2-12-6-14-14zm0 22c-10 2-16 10-18 20h36c-2-10-8-18-18-20zm-10 24v10h6v-6h8v6h6V50H22z"
+                />
+              </svg>
+              <h3>Spartan</h3>
+              <p>Helmet crest on gear & shorts</p>
             </li>
-            <li class="moment reveal">
-              <span class="moment-mark">03</span>
-              <h3>Hector’s end</h3>
-              <p>
-                Grief becomes fury. Achilles returns, and Troy’s champion meets
-                him before the Scaean gates.
-              </p>
+            <li class="mark-card">
+              <svg viewBox="0 0 64 64" aria-hidden="true">
+                <path
+                  fill="currentColor"
+                  d="M32 6l4 10 10-2-6 9 8 7-11 1 1 11-6-9-6 9 1-11-11-1 8-7-6-9 10 2 4-10zm0 28c-8 0-14 4-14 10v8h28v-8c0-6-6-10-14-10z"
+                />
+              </svg>
+              <h3>Pinecone</h3>
+              <p>Scale mark on bands & sleeves</p>
+            </li>
+            <li class="mark-card">
+              <svg viewBox="0 0 64 64" aria-hidden="true">
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  d="M18 50c-6-8-6-20 0-28m28 28c6-8 6-20 0-28M22 46c-4-6-4-16 0-22m20 22c4-6 4-16 0-22"
+                />
+                <circle cx="32" cy="32" r="5" fill="currentColor" />
+              </svg>
+              <h3>Laurel</h3>
+              <p>Victory wreath on sleeves</p>
+            </li>
+            <li class="mark-card">
+              <svg viewBox="0 0 64 64" aria-hidden="true">
+                <circle cx="32" cy="32" r="26" fill="none" stroke="currentColor" stroke-width="3" />
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  d="M32 10v8l10 6v8l-10 6v8m0-36l-10 6v8l10 6m10-14-10 6-10-6m20 14-10 6-10-6"
+                />
+                <circle cx="32" cy="32" r="4" fill="currentColor" />
+              </svg>
+              <h3>Maze</h3>
+              <p>Labyrinth seal on headbands</p>
+            </li>
+            <li class="mark-card">
+              <div class="roman-sample">VIII</div>
+              <h3>Roman marks</h3>
+              <p>Edition & size codes (VII, CXL…)</p>
             </li>
           </ul>
         </div>
       </section>
 
-      <section id="heel" class="section heel">
-        <div class="heel-media" aria-hidden="true">
-          <img
-            src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?auto=format&fit=crop&w=2000&q=80"
-            alt=""
-            width="2000"
-            height="1333"
-            loading="lazy"
-          />
-          <div class="heel-veil"></div>
-        </div>
-        <div class="section-inner heel-copy">
-          <p class="eyebrow">The mark</p>
-          <h2>One place the river missed</h2>
-          <p class="section-copy">
-            Invincible in almost every telling — until an arrow found the heel
-            his mother’s hand had covered. Strength without a soft spot is a
-            myth; Achilles made the soft spot immortal.
-          </p>
-          <a class="cta" href="#top">Return to the shore</a>
+      <section id="shop" class="shop-section">
+        <div class="section-inner wide">
+          <div class="shop-head">
+            <div>
+              <p class="eyebrow">Catalog preview</p>
+              <h2>Sample listings</h2>
+              <p class="section-copy">
+                Each item uses the ACHILLES border card. Tap a card for size, design, quantity, and add to cart.
+              </p>
+            </div>
+            <div class="filter-row" role="tablist" aria-label="Filter products">
+              <button type="button" class="filter is-active" data-filter="all">All</button>
+              <button type="button" class="filter" data-filter="apparel">Apparel</button>
+              <button type="button" class="filter" data-filter="boards">Boards</button>
+              <button type="button" class="filter" data-filter="protection">Protection</button>
+              <button type="button" class="filter" data-filter="accessories">Accessories</button>
+            </div>
+          </div>
+          <div class="product-grid" id="product-grid"></div>
+          <p class="preview-note">Preview build — more photos still being added. Checkout will connect to Shopify later.</p>
         </div>
       </section>
     </main>
 
     <footer class="site-footer">
-      <p class="footer-brand">Achilles</p>
-      <p class="footer-note">A tribute to the Homeric hero · Not affiliated with any studio or brand</p>
+      <div class="footer-brand-row">
+        <svg class="mark mark-eye" viewBox="0 0 64 40" aria-hidden="true">
+          <path
+            fill="currentColor"
+            d="M32 6c-12 0-22 8-28 14 6 6 16 14 28 14s22-8 28-14C54 14 44 6 32 6zm0 22a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-5a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"
+          />
+        </svg>
+        <p class="footer-brand">ACHILLES</p>
+      </div>
+      <p class="footer-note">Athletic apparel · boards · protection · accessories</p>
     </footer>
 
+    <aside class="cart-drawer" id="cart-drawer" aria-hidden="true">
+      <div class="cart-panel">
+        <div class="cart-top">
+          <h2>Cart</h2>
+          <button type="button" class="cart-close" aria-label="Close cart">×</button>
+        </div>
+        <div class="cart-items" data-cart-items></div>
+        <div class="cart-footer">
+          <p class="cart-total">Total <span data-cart-total>$0</span></p>
+          <p class="cart-hint">Preview cart — Shopify checkout connects when you go live.</p>
+        </div>
+      </div>
+    </aside>
+
+    <div class="modal" id="product-modal" aria-hidden="true">
+      <div class="modal-backdrop" data-close-modal></div>
+      <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <button type="button" class="modal-close" data-close-modal aria-label="Close">×</button>
+        <div class="modal-layout">
+          <div class="modal-card-wrap" data-modal-card></div>
+          <div class="modal-buy">
+            <p class="modal-brand">ACHILLES</p>
+            <h2 id="modal-title"></h2>
+            <p class="modal-price" data-modal-price></p>
+            <p class="modal-desc" data-modal-desc></p>
+            <label class="field">
+              <span>Design</span>
+              <select data-modal-design></select>
+            </label>
+            <label class="field">
+              <span>Size</span>
+              <select data-modal-size></select>
+            </label>
+            <label class="field">
+              <span>Quantity</span>
+              <input type="number" min="1" max="10" value="1" data-modal-qty />
+            </label>
+            <button type="button" class="cta full" data-add-cart>Add to cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/products.js"></script>
     <script src="/script.js"></script>
   </body>
 </html>
