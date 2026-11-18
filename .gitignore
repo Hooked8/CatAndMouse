@@ -4,3 +4,4 @@ node_modules/
 dist/
 images/products_raw/
 images/categories_raw/
+tools/__pycache__/
