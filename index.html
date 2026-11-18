@@ -148,7 +148,11 @@
         <div class="cart-items" data-cart-items></div>
         <div class="cart-footer">
           <p class="cart-total">Total <span data-cart-total>$0</span></p>
-          <p class="cart-hint">Preview cart — Shopify checkout connects when you go live.</p>
+          <button type="button" class="pill-cta full" data-checkout>Checkout with Shopify</button>
+          <p class="cart-hint" data-cart-hint>
+            Add your Shopify store domain + Storefront token in
+            <code>shopify-config.js</code> to enable permanent checkout.
+          </p>
         </div>
       </div>
     </aside>
@@ -174,6 +178,8 @@
       </div>
     </div>
 
+    <script src="shopify-config.js"></script>
+    <script src="shopify.js"></script>
     <script src="products.js"></script>
     <script src="script.js"></script>
   </body>

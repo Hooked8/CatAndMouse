@@ -1007,10 +1007,28 @@ select {
   padding-top: 0.9rem;
 }
 
+.cart-footer .pill-cta {
+  margin-top: 0.85rem;
+}
+
+.cart-footer .pill-cta:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .cart-hint {
   margin: 0.55rem 0 0;
   color: var(--mist);
   font-size: 0.8rem;
+}
+
+.cart-hint code {
+  font-size: 0.78em;
+  color: var(--chrome);
+}
+
+.cart-hint a {
+  color: var(--chrome);
 }
 
 .modal {
