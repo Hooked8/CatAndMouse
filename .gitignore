@@ -2,3 +2,5 @@ repos/
 node_modules/
 .DS_Store
 dist/
+images/products_raw/
+images/categories_raw/

@@ -106,11 +106,21 @@
       )
       .join("");
 
-    const list = products.filter((p) => {
-      if (p.category !== activeCategory) return false;
-      if (activeSub === "all") return true;
-      return p.sub === activeSub;
-    });
+    const subOrder = Object.fromEntries(
+      (cat.subs || []).map((s, i) => [s.id, i])
+    );
+    const list = products
+      .filter((p) => {
+        if (p.category !== activeCategory) return false;
+        if (activeSub === "all") return true;
+        return p.sub === activeSub;
+      })
+      .sort((a, b) => {
+        const sa = subOrder[a.sub] ?? 99;
+        const sb = subOrder[b.sub] ?? 99;
+        if (sa !== sb) return sa - sb;
+        return a.name.localeCompare(b.name);
+      });
 
     if (!list.length) {
       categoryGrid.innerHTML = `
