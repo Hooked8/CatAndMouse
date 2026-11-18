@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { shells, strapFeatures, type Shell } from "./data";
+import { shells, strapFeatures, wornGallery, type Shell } from "./data";
 
 export default function App() {
   const [activeId, setActiveId] = useState(shells[0].id);
@@ -21,6 +21,7 @@ export default function App() {
         <nav className="nav">
           <a href="#strap">Strap</a>
           <a href="#shells">Shells</a>
+          <a href="#worn">Worn</a>
           <a href="#system">System</a>
         </nav>
       </header>
@@ -30,6 +31,7 @@ export default function App() {
         <StrapSection />
         <ShellsSection active={active} onSelect={setActiveId} />
         <WornSection shell={active} />
+        <WornGallerySection />
         <SystemSection />
       </main>
 
@@ -126,8 +128,8 @@ function ShellsSection({
       <div className="section-head">
         <h2>Five fashion shells</h2>
         <p>
-          Snap-on covers pulled from ACHILLES pattern and logo language —
-          rainbow waves, marble swirls, warrior marks.
+          Solid continuous shells — no decorative cutout. Patterns and logos
+          from ACHILLES: rainbow waves, marble swirls, warrior marks.
         </p>
       </div>
 
@@ -203,9 +205,6 @@ function ShellsSection({
 }
 
 function WornSection({ shell }: { shell: Shell }) {
-  const wornImage = shell.wornImage ?? shell.image;
-  const isFlat = !shell.wornImage;
-
   return (
     <section className="section worn">
       <div className="worn-panel">
@@ -213,8 +212,8 @@ function WornSection({ shell }: { shell: Shell }) {
           <h2>On court</h2>
           <p>
             Chassis stays black and quiet. The{" "}
-            <em>{shell.name}</em> shell carries the brand — swap it when the
-            uniform changes.
+            <em>{shell.name}</em> shell carries the brand — continuous face, no
+            fake gap. Support comes from the inner pad on the tendon.
           </p>
           <ul>
             <li>Sits below the kneecap, not around the whole joint</li>
@@ -222,17 +221,35 @@ function WornSection({ shell }: { shell: Shell }) {
             <li>Shells remove for wash or travel without tools</li>
           </ul>
         </div>
-        <figure className={`worn-shot ${isFlat ? "flat" : ""}`}>
+        <figure className="worn-shot">
           <img
             key={shell.id}
-            src={wornImage}
-            alt={
-              isFlat
-                ? `${shell.name} snap-on shell`
-                : `ACHILLES strap worn with ${shell.name} shell`
-            }
+            src={shell.wornImage}
+            alt={`ACHILLES strap worn with ${shell.name} shell on a human knee`}
           />
         </figure>
+      </div>
+    </section>
+  );
+}
+
+function WornGallerySection() {
+  return (
+    <section className="section gallery" id="worn">
+      <div className="section-head">
+        <h2>On a real knee</h2>
+        <p>
+          Same chassis, five solid shells — worn below the patella on natural
+          skin. No decorative cutout; the pad does the work from the inside.
+        </p>
+      </div>
+      <div className="worn-gallery">
+        {wornGallery.map((shot) => (
+          <figure key={shot.src} className="gallery-card">
+            <img src={shot.src} alt={shot.label} />
+            <figcaption>{shot.label}</figcaption>
+          </figure>
+        ))}
       </div>
     </section>
   );
@@ -262,8 +279,9 @@ function SystemSection() {
           <div>
             <h3>Snap the shell</h3>
             <p>
-              Align the four posts. Press until you feel the click. The bottom
-              cutout clears the pad so pressure stays consistent.
+              Align the four posts. Press until you feel the click. The shell is
+              a solid face — the soft silicone pad on the inner liner is what
+              loads the tendon.
             </p>
           </div>
         </li>

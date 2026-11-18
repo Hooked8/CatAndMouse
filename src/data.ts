@@ -5,7 +5,7 @@ export type Shell = {
   logo: string;
   palette: string[];
   image: string;
-  wornImage?: string;
+  wornImage: string;
   notes: string;
 };
 
@@ -19,7 +19,7 @@ export const shells: Shell[] = [
     image: "/images/shell-01-prism-labyrinth.jpg",
     wornImage: "/images/achilles-strap-worn-prism.jpg",
     notes:
-      "Direct lift from the brand’s rainbow wave language. High-visibility court energy for night games and highlights.",
+      "Solid continuous shell face — no decorative cutout. Rainbow wave language for high-visibility court energy.",
   },
   {
     id: "violet",
@@ -30,7 +30,7 @@ export const shells: Shell[] = [
     image: "/images/shell-02-violet-marble.jpg",
     wornImage: "/images/achilles-strap-worn-violet.jpg",
     notes:
-      "Cleaner, more fashion-forward colorway. Reads as accessory first, support second.",
+      "Fashion-first colorway on a continuous oval shell. Reads as kit, not a brace.",
   },
   {
     id: "spartan",
@@ -39,8 +39,9 @@ export const shells: Shell[] = [
     logo: "Spartan helmet",
     palette: ["#6D28D9", "#2563EB", "#F472B6", "#FACC15", "#FB923C"],
     image: "/images/shell-03-spartan-surge.jpg",
+    wornImage: "/images/achilles-strap-worn-spartan.jpg",
     notes:
-      "Aggressive game-day shell. Helmet mark sits above the cutout so it stays readable when strapped.",
+      "Game-day shell. Helmet mark centered on a solid face so it stays readable when strapped.",
   },
   {
     id: "agate",
@@ -51,7 +52,7 @@ export const shells: Shell[] = [
     image: "/images/shell-04-horus-agate.jpg",
     wornImage: "/images/achilles-strap-worn-agate.jpg",
     notes:
-      "Premium dark colorway for travel kits and pro looks. Gold veining adds jewelry-level finish.",
+      "Premium dark colorway. Gold veining on a continuous shell — support comes from the inner pad, not a cutout.",
   },
   {
     id: "electric",
@@ -60,8 +61,44 @@ export const shells: Shell[] = [
     logo: "Boxed A",
     palette: ["#1E3A8A", "#2563EB", "#22D3EE", "#DB2777", "#F472B6"],
     image: "/images/shell-05-electric-a.jpg",
+    wornImage: "/images/achilles-strap-worn-electric.jpg",
     notes:
-      "Minimal brand hit over maximal pattern. Matches the streetwear pant color story.",
+      "Minimal brand hit over maximal pattern. Solid shell face matches the streetwear pant color story.",
+  },
+];
+
+export const wornGallery = [
+  {
+    src: "/images/achilles-strap-worn-prism.jpg",
+    label: "Prism Labyrinth · side view",
+  },
+  {
+    src: "/images/worn-prism-front.jpg",
+    label: "Prism Labyrinth · front view",
+  },
+  {
+    src: "/images/achilles-strap-worn-violet.jpg",
+    label: "Violet Marble · side view",
+  },
+  {
+    src: "/images/worn-violet-bent.jpg",
+    label: "Violet Marble · ready stance",
+  },
+  {
+    src: "/images/achilles-strap-worn-spartan.jpg",
+    label: "Spartan Surge · side view",
+  },
+  {
+    src: "/images/worn-spartan-inner.jpg",
+    label: "Spartan Surge · wrap detail",
+  },
+  {
+    src: "/images/achilles-strap-worn-agate.jpg",
+    label: "Horus Agate · side view",
+  },
+  {
+    src: "/images/achilles-strap-worn-electric.jpg",
+    label: "Electric A · side view",
   },
 ];
 
@@ -80,11 +117,11 @@ export const strapFeatures = [
   },
   {
     title: "Soft silicone pad",
-    body: "Contoured pressure pad targets the patellar tendon — support without thick neoprene bulk.",
+    body: "Contoured pressure pad on the inner face targets the patellar tendon — that is the therapeutic mechanism, not a shell cutout.",
   },
   {
     title: "Four-post snap system",
-    body: "Shells click onto the chassis in seconds. Swap colorways between warmups and match play.",
+    body: "Continuous solid shells click onto the chassis. No decorative gap — pattern runs edge to edge.",
   },
   {
     title: "Low-bulk closure",
