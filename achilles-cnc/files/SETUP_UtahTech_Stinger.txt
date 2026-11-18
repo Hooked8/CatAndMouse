@@ -1,0 +1,61 @@
+# Achilles 8.5" Wave + Spartan — Utah Tech Stinger III
+
+## Machine & software (Utah Tech Atwood Innovation Plaza)
+
+- **CNC:** CAMaster **Stinger III** (woodshop) — also have an X-Carve for smaller work
+- **Controller:** **WinCNC** (runs on the Stinger PC)
+- **CAM you prepare at home:** **Autodesk Fusion 360** (free for personal) or **VCarve**
+- **Flow:** Import this SVG/DXF in Fusion → toolpaths → post with **WinCNC** post → `.tap` → load on Stinger
+
+Contact / training (required before use): makerspace@utahtech.edu · 435-879-4532  
+Stinger reservation: billed in 30‑min blocks at the Makerspace.
+
+## Your board
+
+- **Width:** 8.5 inches  
+- **Length used in file:** 32 inches (standard popsicle graphic length)  
+- **Side:** underside (truck side) — grip tape covers the top  
+- **File origin:** lower-left of the deck outline, units = **inches**
+
+## Files in this pack
+
+| File | Use |
+|------|-----|
+| `ACHILLES_8.5in_WaveSpartan_Stinger_Fusion360.svg` | Primary — import to Fusion / VCarve |
+| `ACHILLES_8.5in_WaveSpartan_Stinger_Fusion360.dxf` | Alternate import |
+| `SETUP_UtahTech_Stinger.txt` | This guide (short) |
+
+Layers:
+- `SHADE` — wavy optical grooves across the whole underside  
+- `LOGO` — Spartan helmet + Greek key + laurel + ACHILLES (cut deeper)  
+- `GUIDES` — deck outline / centerline — **delete or ignore** (do not cut through)
+
+## Fusion 360 steps (Stinger)
+
+1. New Design → Import SVG or DXF (units **inches**, insert on XY).
+2. Scale check: sketch should read **~32" × 8.5"**.
+3. Manufacture workspace → New Setup  
+   - Orientation: Z up, X along board length  
+   - Stock: your maple deck (or a scrap the same thickness)  
+   - Origin: bottom-left of outline (match how you zero the Stinger)
+4. **Toolpath A — SHADE** (select SHADE curves)  
+   - 60° V-bit **or** 1/8" ball nose  
+   - Depth: **0.04–0.08"** (1–2 mm) — light optical shade  
+   - Climb mill, moderate feed; test on scrap first
+5. **Toolpath B — LOGO** (select LOGO curves)  
+   - 60° V-bit preferred for crisp emblem  
+   - Depth: **0.10–0.20"** (2.5–5 mm) — deep carved look (OK to go deep as requested)  
+   - Keep above truck holes if deck is already drilled
+6. Post process → **WinCNC** post → save `.tap`
+7. On Stinger PC: open WinCNC → load `.tap` → set zeros → dry run / frame → cut
+
+## Bits & safety
+
+- Maple holds detail well; sharp bit, clear chips  
+- Vacuum / clamps — deck must not move  
+- Complete Utah Tech Makerspace CNC training before booking the Stinger  
+- Always scrap-test depth/feeds
+
+## Design
+
+Full-board vertical wave shade + deep center Spartan medallion (Greek key ring, laurel, helmet) + ACHILLES.
