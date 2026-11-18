@@ -5,203 +5,151 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="ACHILLES — athletic apparel, boards, and gear. Built for water, snow, and street."
+      content="ACHILLES — luxury athletic apparel, snow, skate, and performance gear."
     />
     <title>ACHILLES</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/styles.css" />
+    <link rel="icon" href="/images/brand/achilles-crest.jpg" />
   </head>
   <body>
-    <a class="skip" href="#shop">Skip to shop</a>
+    <a class="skip" href="#models">Skip to models</a>
 
-    <header class="site-header">
+    <header class="site-header" data-header>
       <div class="header-inner">
-        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Open menu">
-          <span></span><span></span>
+        <button class="icon-btn menu-toggle" type="button" aria-expanded="false" aria-controls="drawer-nav" aria-label="Open menu">
+          <span></span><span></span><span></span>
         </button>
 
-        <a class="logo" href="#top" aria-label="ACHILLES home">
-          <svg class="mark mark-eye" viewBox="0 0 64 40" aria-hidden="true">
-            <path
-              fill="currentColor"
-              d="M32 6c-12 0-22 8-28 14 6 6 16 14 28 14s22-8 28-14C54 14 44 6 32 6zm0 22a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-5a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM8 18l6-2-2 4-4-2zm48 0l-6-2 2 4 4-2zM20 30l-3 6h4l2-4 2 4h4l-3-6h-6z"
-            />
-          </svg>
-          <span class="logo-word">ACHILLES</span>
+        <a class="crest-link" href="#home" data-nav="home" aria-label="ACHILLES home">
+          <img class="crest-mark" src="/images/brand/achilles-crest.jpg" alt="" width="56" height="56" />
         </a>
 
-        <nav id="site-menu" class="site-nav" aria-label="Shop">
-          <a href="#shop" data-filter="all">Shop</a>
-          <a href="#shop" data-filter="apparel">Apparel</a>
-          <a href="#shop" data-filter="boards">Boards</a>
-          <a href="#shop" data-filter="protection">Protection</a>
-          <a href="#shop" data-filter="accessories">Accessories</a>
-          <a href="#marks">Marks</a>
-        </nav>
-
-        <button class="cart-btn" type="button" aria-label="Open cart">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.6"
-              d="M4 6h2l2.2 10.2a1 1 0 0 0 1 .8h8.4a1 1 0 0 0 1-.8L20 8H8"
-            />
-            <circle cx="10" cy="20" r="1.2" fill="currentColor" />
-            <circle cx="17" cy="20" r="1.2" fill="currentColor" />
-          </svg>
-          <span class="cart-count" data-cart-count>0</span>
-        </button>
+        <div class="header-actions">
+          <button class="icon-btn cart-btn" type="button" aria-label="Open cart">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="none" stroke="currentColor" stroke-width="1.5" d="M5 7h14l-1.2 9.2a1.5 1.5 0 0 1-1.5 1.3H7.7a1.5 1.5 0 0 1-1.5-1.3L5 7Zm3.2 0 .6-2.2A1.5 1.5 0 0 1 10.25 3.5h3.5a1.5 1.5 0 0 1 1.45 1.3L15.8 7" />
+            </svg>
+            <span class="cart-count" data-cart-count>0</span>
+          </button>
+        </div>
       </div>
     </header>
 
-    <main id="top">
-      <section class="hero" aria-label="ACHILLES">
-        <div class="hero-media" aria-hidden="true">
-          <img
-            class="hero-image"
-            src="/images/products/board-02.jpg"
-            alt=""
-            width="1200"
-            height="1500"
-            fetchpriority="high"
-          />
-          <div class="hero-veil"></div>
+    <aside class="drawer" id="drawer-nav" aria-hidden="true">
+      <div class="drawer-backdrop" data-close-drawer></div>
+      <nav class="drawer-panel" aria-label="Primary">
+        <div class="drawer-top">
+          <img class="crest-mark lg" src="/images/brand/achilles-crest.jpg" alt="" width="72" height="72" />
+          <button type="button" class="icon-btn" data-close-drawer aria-label="Close menu">×</button>
         </div>
-        <div class="hero-content">
-          <p class="brand">ACHILLES</p>
-          <h1>Built for impact. Marked for legend.</h1>
-          <p class="lede">
-            Apparel, wakeboards, snowboards, skis, and gear — framed the ACHILLES way.
-          </p>
-          <div class="cta-row">
-            <a class="cta" href="#shop">Shop the drop</a>
-            <a class="cta cta-ghost" href="#marks">See the marks</a>
+        <a href="#home" data-nav="home">Home</a>
+        <a href="#models" data-nav="models">Models</a>
+        <a href="#category/snow" data-nav="category" data-category="snow">Snow</a>
+        <a href="#category/skate" data-nav="category" data-category="skate">Skate</a>
+        <a href="#category/water" data-nav="category" data-category="water">Water</a>
+        <a href="#category/clothing" data-nav="category" data-category="clothing">Clothing</a>
+        <a href="#category/protection" data-nav="category" data-category="protection">Protection</a>
+        <a href="#category/accessories" data-nav="category" data-category="accessories">Accessories</a>
+        <div class="drawer-ornament" aria-hidden="true">
+          <span class="viii-bar">← VIII →</span>
+        </div>
+      </nav>
+    </aside>
+
+    <main>
+      <!-- HOME -->
+      <section class="view view-home is-active" id="view-home" data-view="home">
+        <section class="hero" aria-label="ACHILLES Collection VIII">
+          <div class="hero-stage" aria-hidden="true">
+            <div class="gear-studio">
+              <img class="gear g1" src="/images/products/board-02.jpg" alt="" />
+              <img class="gear g2" src="/images/products/ski-01.jpg" alt="" />
+              <img class="gear g3" src="/images/products/wakeboard-01.jpg" alt="" />
+              <img class="gear g4" src="/images/products/short-03.jpg" alt="" />
+              <img class="gear g5" src="/images/products/gear-01.jpg" alt="" />
+              <img class="gear g6" src="/images/products/sleeve-01.jpg" alt="" />
+              <img class="gear g7" src="/images/products/headband-02.jpg" alt="" />
+              <img class="gear g8" src="/images/products/apparel-01.jpg" alt="" />
+              <div class="studio-floor"></div>
+            </div>
+            <div class="hero-veil"></div>
           </div>
-        </div>
+
+          <div class="hero-content">
+            <img class="hero-crest" src="/images/brand/achilles-crest.jpg" alt="ACHILLES" width="120" height="120" />
+            <p class="hero-kicker"><span class="eye-inline" aria-hidden="true"></span> Collection VIII</p>
+            <h1>ACHILLES.</h1>
+            <p class="hero-lede">Snow. Skate. Water. Clothing. One house of gear.</p>
+            <a class="pill-cta" href="#models" data-nav="models">Discover more</a>
+          </div>
+          <a class="scroll-cue" href="#models" data-nav="models" aria-label="Scroll to models">
+            <span></span>
+          </a>
+        </section>
+
+        <section class="models" id="models">
+          <div class="models-head">
+            <img class="mini-crest" src="/images/brand/achilles-crest.jpg" alt="" width="40" height="40" />
+            <p class="eyebrow">Models</p>
+            <h2>Choose your line.</h2>
+            <p class="viii-bar">← VIII →</p>
+          </div>
+
+          <div class="model-stack" id="model-stack"></div>
+        </section>
+
+        <section class="brand-strip">
+          <div class="brand-strip-inner">
+            <div class="symbol-row" aria-hidden="true">
+              <span class="sym eye"></span>
+              <span class="sym a-mark">A</span>
+              <span class="sym pine"></span>
+              <span class="sym laurel"></span>
+              <span class="sym viii">VIII</span>
+            </div>
+            <p>Victory marks the house. Every piece carries the crest.</p>
+          </div>
+        </section>
       </section>
 
-      <section id="marks" class="marks-section">
-        <div class="section-inner">
-          <p class="eyebrow">Brand system</p>
-          <h2>Symbols & marks</h2>
-          <p class="section-copy">
-            These marks show up across product graphics, listing cards, and the menu. Preview only — more photos still coming in.
-          </p>
-          <ul class="marks-grid">
-            <li class="mark-card">
-              <svg viewBox="0 0 80 48" aria-hidden="true">
-                <path
-                  fill="currentColor"
-                  d="M40 6c-16 0-28 10-36 18 8 8 20 18 36 18s28-10 36-18C68 16 56 6 40 6zm0 28a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-6a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 22l8-3-3 5-5-2zm64 0l-8-3 3 5 5-2zM24 38l-4 8h5l3-5 3 5h5l-4-8h-8z"
-                />
-              </svg>
-              <h3>Eye of Horus</h3>
-              <p>Card footer mark · protection</p>
-            </li>
-            <li class="mark-card">
-              <svg viewBox="0 0 64 64" aria-hidden="true">
-                <path
-                  fill="currentColor"
-                  d="M32 4c-2 8-8 12-14 14 8 1 12 6 14 12 2-6 6-11 14-12-6-2-12-6-14-14zm0 22c-10 2-16 10-18 20h36c-2-10-8-18-18-20zm-10 24v10h6v-6h8v6h6V50H22z"
-                />
-              </svg>
-              <h3>Spartan</h3>
-              <p>Helmet crest on gear & shorts</p>
-            </li>
-            <li class="mark-card">
-              <svg viewBox="0 0 64 64" aria-hidden="true">
-                <path
-                  fill="currentColor"
-                  d="M32 6l4 10 10-2-6 9 8 7-11 1 1 11-6-9-6 9 1-11-11-1 8-7-6-9 10 2 4-10zm0 28c-8 0-14 4-14 10v8h28v-8c0-6-6-10-14-10z"
-                />
-              </svg>
-              <h3>Pinecone</h3>
-              <p>Scale mark on bands & sleeves</p>
-            </li>
-            <li class="mark-card">
-              <svg viewBox="0 0 64 64" aria-hidden="true">
-                <path
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="3"
-                  d="M18 50c-6-8-6-20 0-28m28 28c6-8 6-20 0-28M22 46c-4-6-4-16 0-22m20 22c4-6 4-16 0-22"
-                />
-                <circle cx="32" cy="32" r="5" fill="currentColor" />
-              </svg>
-              <h3>Laurel</h3>
-              <p>Victory wreath on sleeves</p>
-            </li>
-            <li class="mark-card">
-              <svg viewBox="0 0 64 64" aria-hidden="true">
-                <circle cx="32" cy="32" r="26" fill="none" stroke="currentColor" stroke-width="3" />
-                <path
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.4"
-                  d="M32 10v8l10 6v8l-10 6v8m0-36l-10 6v8l10 6m10-14-10 6-10-6m20 14-10 6-10-6"
-                />
-                <circle cx="32" cy="32" r="4" fill="currentColor" />
-              </svg>
-              <h3>Maze</h3>
-              <p>Labyrinth seal on headbands</p>
-            </li>
-            <li class="mark-card">
-              <div class="roman-sample">VIII</div>
-              <h3>Roman marks</h3>
-              <p>Edition & size codes (VII, CXL…)</p>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <section id="shop" class="shop-section">
-        <div class="section-inner wide">
-          <div class="shop-head">
-            <div>
-              <p class="eyebrow">Catalog preview</p>
-              <h2>Sample listings</h2>
-              <p class="section-copy">
-                Each item uses the ACHILLES border card. Tap a card for size, design, quantity, and add to cart.
-              </p>
-            </div>
-            <div class="filter-row" role="tablist" aria-label="Filter products">
-              <button type="button" class="filter is-active" data-filter="all">All</button>
-              <button type="button" class="filter" data-filter="apparel">Apparel</button>
-              <button type="button" class="filter" data-filter="boards">Boards</button>
-              <button type="button" class="filter" data-filter="protection">Protection</button>
-              <button type="button" class="filter" data-filter="accessories">Accessories</button>
-            </div>
+      <!-- CATEGORY -->
+      <section class="view view-category" id="view-category" data-view="category" hidden>
+        <div class="category-hero">
+          <img class="category-hero-img" data-category-hero alt="" />
+          <div class="category-hero-veil"></div>
+          <div class="category-hero-copy">
+            <button type="button" class="back-link" data-nav="models">← Models</button>
+            <h1 data-category-title></h1>
+            <p data-category-desc></p>
           </div>
-          <div class="product-grid" id="product-grid"></div>
-          <p class="preview-note">Preview build — more photos still being added. Checkout will connect to Shopify later.</p>
+        </div>
+
+        <div class="category-body">
+          <div class="subnav" data-subnav></div>
+          <div class="product-grid" id="category-grid"></div>
+          <p class="preview-note">Preview catalog — more photos still arriving. Checkout connects to Shopify when you go live.</p>
         </div>
       </section>
     </main>
 
     <footer class="site-footer">
-      <div class="footer-brand-row">
-        <svg class="mark mark-eye" viewBox="0 0 64 40" aria-hidden="true">
-          <path
-            fill="currentColor"
-            d="M32 6c-12 0-22 8-28 14 6 6 16 14 28 14s22-8 28-14C54 14 44 6 32 6zm0 22a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-5a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"
-          />
-        </svg>
-        <p class="footer-brand">ACHILLES</p>
-      </div>
-      <p class="footer-note">Athletic apparel · boards · protection · accessories</p>
+      <img class="footer-crest" src="/images/brand/achilles-crest.jpg" alt="ACHILLES" width="96" height="96" />
+      <p class="footer-word">ACHILLES</p>
+      <p class="viii-bar">← VIII →</p>
+      <p class="footer-note">Snow · Skate · Water · Clothing · Protection</p>
     </footer>
 
     <aside class="cart-drawer" id="cart-drawer" aria-hidden="true">
       <div class="cart-panel">
         <div class="cart-top">
           <h2>Cart</h2>
-          <button type="button" class="cart-close" aria-label="Close cart">×</button>
+          <button type="button" class="icon-btn cart-close" aria-label="Close cart">×</button>
         </div>
         <div class="cart-items" data-cart-items></div>
         <div class="cart-footer">
@@ -218,23 +166,15 @@
         <div class="modal-layout">
           <div class="modal-card-wrap" data-modal-card></div>
           <div class="modal-buy">
+            <img class="mini-crest" src="/images/brand/achilles-crest.jpg" alt="" width="36" height="36" />
             <p class="modal-brand">ACHILLES</p>
             <h2 id="modal-title"></h2>
             <p class="modal-price" data-modal-price></p>
             <p class="modal-desc" data-modal-desc></p>
-            <label class="field">
-              <span>Design</span>
-              <select data-modal-design></select>
-            </label>
-            <label class="field">
-              <span>Size</span>
-              <select data-modal-size></select>
-            </label>
-            <label class="field">
-              <span>Quantity</span>
-              <input type="number" min="1" max="10" value="1" data-modal-qty />
-            </label>
-            <button type="button" class="cta full" data-add-cart>Add to cart</button>
+            <label class="field"><span>Design</span><select data-modal-design></select></label>
+            <label class="field"><span>Size</span><select data-modal-size></select></label>
+            <label class="field"><span>Quantity</span><input type="number" min="1" max="10" value="1" data-modal-qty /></label>
+            <button type="button" class="pill-cta full" data-add-cart>Add to cart</button>
           </div>
         </div>
       </div>
