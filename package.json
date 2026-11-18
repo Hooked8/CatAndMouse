@@ -1,0 +1,10 @@
+{
+  "name": "achilles",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Achilles — a tribute website to the Homeric hero",
+  "scripts": {
+    "start": "python3 -m http.server 4173 --bind 127.0.0.1",
+    "build": "mkdir -p dist && cp index.html styles.css script.js dist/"
+  }
+}
