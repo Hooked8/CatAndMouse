@@ -83,7 +83,10 @@ window.ACHILLES_PRODUCTS = [
     roman: "VIII",
     badge: "VIII",
     description: "Heavyweight hoodie with glowing supercar blueprint graphics and crest mark.",
-    designs: [{ id: "back", label: "Back", image: "/images/products/cloth-hoodie-blueprint.jpg", title: "BLUEPRINT HOODIE — BACK" }],
+    designs: [
+      { id: "back", label: "Back", image: "/images/products/cloth-hoodie-blueprint.jpg", title: "BLUEPRINT HOODIE — BACK" },
+      { id: "959", label: "959 Blueprint", image: "/images/products/cloth-hoodie-grey-959-blueprint.jpg", title: "959 BLUEPRINT — BACK" },
+    ],
     sizes: ["S", "M", "L", "XL", "XXL"],
   },
   {
@@ -95,7 +98,11 @@ window.ACHILLES_PRODUCTS = [
     roman: "VII",
     badge: "VIII",
     description: "Navy racing hoodie with sports-car graphic and pinecone mark.",
-    designs: [{ id: "front", label: "Front", image: "/images/products/cloth-hoodie-racing.jpg", title: "RACING HOODIE — FRONT" }],
+    designs: [
+      { id: "front", label: "Front", image: "/images/products/cloth-hoodie-racing.jpg", title: "RACING HOODIE — FRONT" },
+      { id: "lookbook", label: "Lookbook", image: "/images/products/cloth-hoodie-racing-lookbook.jpg", title: "RACING HOODIE — FRONT" },
+      { id: "neon", label: "Neon Race", image: "/images/products/cloth-hoodie-charcoal-neon-race.jpg", title: "NEON RACE — FRONT" },
+    ],
     sizes: ["S", "M", "L", "XL", "XXL"],
   },
   {
@@ -107,7 +114,10 @@ window.ACHILLES_PRODUCTS = [
     roman: "VII",
     badge: "VIII",
     description: "Royal blue hoodie with maze seal, laurel wreath, and Eye of Horus hood mark.",
-    designs: [{ id: "back", label: "Back", image: "/images/products/cloth-hoodie-maze.jpg", title: "MAZE HOODIE — BACK" }],
+    designs: [
+      { id: "back", label: "Back", image: "/images/products/cloth-hoodie-maze.jpg", title: "MAZE HOODIE — BACK" },
+      { id: "lookbook", label: "Lookbook", image: "/images/products/cloth-hoodie-blue-maze-lookbook.jpg", title: "MAZE HOODIE — BACK" },
+    ],
     sizes: ["S", "M", "L", "XL", "XXL"],
   },
   {
@@ -119,7 +129,27 @@ window.ACHILLES_PRODUCTS = [
     roman: "VIII",
     badge: "VIII",
     description: "Navy hoodie with white supercar linework stack and VIII mark.",
-    designs: [{ id: "back", label: "Back", image: "/images/products/cloth-hoodie-linework.jpg", title: "LINEWORK HOODIE — BACK" }],
+    designs: [
+      { id: "back", label: "Back", image: "/images/products/cloth-hoodie-linework.jpg", title: "LINEWORK HOODIE — BACK" },
+      { id: "cayman", label: "Cayman Maze", image: "/images/products/cloth-hoodie-grey-cayman-maze.jpg", title: "CAYMAN MAZE — BACK" },
+      { id: "lfa", label: "LFA Rear", image: "/images/products/cloth-hoodie-charcoal-lfa.jpg", title: "LFA — BACK" },
+      { id: "supercar", label: "Supercar Crest", image: "/images/products/cloth-hoodie-black-supercar-crest.jpg", title: "SUPERCAR — BACK" },
+    ],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+  },
+  {
+    id: "hoodie-essentials",
+    name: "Essentials Hoodie",
+    category: "clothing",
+    sub: "hoodies",
+    price: 128,
+    roman: "VIII",
+    badge: "VIII",
+    description: "Core ACHILLES essentials hoodie with wordmark and maze marks.",
+    designs: [
+      { id: "charcoal", label: "Charcoal", image: "/images/products/cloth-hoodie-charcoal-essentials.jpg", title: "ESSENTIALS — FRONT" },
+      { id: "cream-maze", label: "Cream Maze", image: "/images/products/cloth-hoodie-cream-essentials-maze.jpg", title: "ESSENTIALS — MAZE" },
+    ],
     sizes: ["S", "M", "L", "XL", "XXL"],
   },
   {
@@ -231,6 +261,7 @@ window.ACHILLES_PRODUCTS = [
     designs: [
       { id: "back", label: "Cars Back", image: "/images/products/cloth-hoodie-navy-cars-back.jpg", title: "NAVY CARS — BACK" },
       { id: "front", label: "GT3 Front", image: "/images/products/cloth-hoodie-navy-gt3-front.jpg", title: "NAVY GT3 — FRONT" },
+      { id: "m3", label: "M3 Crest", image: "/images/products/cloth-hoodie-navy-m3-crest.jpg", title: "NAVY M3 — FRONT" },
     ],
     sizes: ["S", "M", "L", "XL", "XXL"],
   },
@@ -291,7 +322,10 @@ window.ACHILLES_PRODUCTS = [
     roman: "VIII",
     badge: "VIII",
     description: "Red fleece shorts with crest, VIII, and sports-car mark.",
-    designs: [{ id: "front", label: "Front", image: "/images/products/cloth-fleece-shorts-red.jpg", title: "FLEECE SHORTS — FRONT" }],
+    designs: [
+      { id: "front", label: "Front", image: "/images/products/cloth-fleece-shorts-red.jpg", title: "FLEECE SHORTS — FRONT" },
+      { id: "f40", label: "F40", image: "/images/products/cloth-shorts-red-f40.jpg", title: "FLEECE SHORTS — F40" },
+    ],
     sizes: ["S", "M", "L", "XL", "XXL"],
   },
   {
@@ -303,7 +337,10 @@ window.ACHILLES_PRODUCTS = [
     roman: "VIII",
     badge: "VIII",
     description: "Plush cowprint fleece shorts with metallic ACHILLES crest.",
-    designs: [{ id: "front", label: "Front", image: "/images/products/cloth-shorts-cowprint.jpg", title: "COWPRINT SHORTS — FRONT" }],
+    designs: [
+      { id: "front", label: "Front", image: "/images/products/cloth-shorts-cowprint.jpg", title: "COWPRINT SHORTS — FRONT" },
+      { id: "lookbook", label: "Lookbook", image: "/images/products/cloth-shorts-cowprint-lookbook.jpg", title: "COWPRINT SHORTS — FRONT" },
+    ],
     sizes: ["S", "M", "L", "XL", "XXL"],
   },
   {
@@ -786,6 +823,7 @@ window.ACHILLES_PRODUCTS = [
     designs: [
       { id: "main", label: "Main", image: "/images/products/apparel-06.jpg", title: "SESSION SOCK — PAIR" },
       { id: "crest", label: "Crest VIII", image: "/images/products/cloth-socks-black-crest.jpg", title: "SOCK — CREST" },
+      { id: "purple-eye", label: "Purple Eye", image: "/images/products/cloth-socks-purple-eye.jpg", title: "SOCK — PURPLE" },
     ],
     sizes: ["S/M", "L/XL"],
   },
