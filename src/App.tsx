@@ -1,9 +1,18 @@
 import { useEffect, useState } from "react";
-import { shells, strapFeatures, wornGallery, type Shell } from "./data";
+import {
+  moreShields,
+  shells,
+  strapFeatures,
+  wornGallery,
+  type Shell,
+} from "./data";
+
+const allSelectable = [...shells, ...moreShields];
 
 export default function App() {
   const [activeId, setActiveId] = useState(shells[0].id);
-  const active = shells.find((s) => s.id === activeId) ?? shells[0];
+  const active =
+    allSelectable.find((s) => s.id === activeId) ?? shells[0];
 
   useEffect(() => {
     document.documentElement.style.setProperty(
@@ -20,7 +29,7 @@ export default function App() {
         </a>
         <nav className="nav">
           <a href="#strap">Strap</a>
-          <a href="#shells">Shells</a>
+          <a href="#shells">Shields</a>
           <a href="#worn">Worn</a>
           <a href="#system">System</a>
         </nav>
@@ -30,6 +39,7 @@ export default function App() {
         <Hero />
         <StrapSection />
         <ShellsSection active={active} onSelect={setActiveId} />
+        <MoreBoardSection activeId={activeId} onSelect={setActiveId} />
         <WornSection shell={active} />
         <WornGallerySection />
         <SystemSection />
@@ -38,7 +48,7 @@ export default function App() {
       <footer className="footer">
         <p className="footer-brand">ACHILLES</p>
         <p className="footer-note">
-          Patellar tendon strap · functional chassis + snap-on fashion shells
+          Patellar tendon strap · aspis shield shells with Greek-key rim
         </p>
       </footer>
     </div>
@@ -53,11 +63,11 @@ function Hero() {
         <p className="eyebrow">Volleyball · Basketball</p>
         <h1 className="hero-brand">ACHILLES</h1>
         <p className="hero-line">
-          Tendon support that looks like your kit — not a medical brace.
+          Tendon support shaped like a Spartan shield — not a medical brace.
         </p>
         <div className="hero-ctas">
           <a className="btn primary" href="#shells">
-            Shop the shells
+            See the shields
           </a>
           <a className="btn ghost" href="#strap">
             See the strap
@@ -66,8 +76,8 @@ function Hero() {
       </div>
       <div className="hero-visual">
         <img
-          src="/images/achilles-strap-worn-prism.jpg"
-          alt="ACHILLES patellar strap worn with Prism Labyrinth shell"
+          src="/images/shields/worn-shield-helmet.jpg"
+          alt="ACHILLES patellar strap with Spartan helmet shield shell"
           className="hero-img"
         />
       </div>
@@ -82,7 +92,7 @@ function StrapSection() {
         <h2>The functional strap</h2>
         <p>
           One chassis. Lightweight, breathable, and built to stay put under
-          pads — shells snap on top.
+          pads — circular aspis shells snap on top.
         </p>
       </div>
 
@@ -92,7 +102,7 @@ function StrapSection() {
             src="/images/achilles-functional-strap.jpg"
             alt="Black ACHILLES functional patellar strap with snap posts"
           />
-          <figcaption>Chassis · charcoal mesh + four snap posts</figcaption>
+          <figcaption>Chassis · charcoal mesh + snap posts</figcaption>
         </figure>
 
         <figure className="strap-shot secondary">
@@ -123,17 +133,22 @@ function ShellsSection({
   active: Shell;
   onSelect: (id: string) => void;
 }) {
+  const index = Math.max(
+    0,
+    allSelectable.findIndex((s) => s.id === active.id),
+  );
+
   return (
     <section className="section shells" id="shells">
       <div className="section-head">
-        <h2>Five fashion shells</h2>
+        <h2>Aspis shield shells</h2>
         <p>
-          Solid continuous shells — no decorative cutout. Patterns and logos
-          from ACHILLES: rainbow waves, marble swirls, warrior marks.
+          Circular Spartan-shield face with a Greek-key meander rim. Swap the
+          center mark: helmet, lambda arrow, wreath, labyrinth, or pinecone.
         </p>
       </div>
 
-      <div className="shell-picker" role="tablist" aria-label="Fashion shells">
+      <div className="shell-picker" role="tablist" aria-label="Core shield marks">
         {shells.map((shell, i) => (
           <button
             key={shell.id}
@@ -156,22 +171,23 @@ function ShellsSection({
       </div>
 
       <div className="shell-stage" key={active.id}>
-        <figure className="shell-hero">
-          <img src={active.image} alt={`${active.name} snap-on shell`} />
+        <figure className="shell-hero circle">
+          <img src={active.image} alt={`${active.name} aspis shield shell`} />
         </figure>
         <div className="shell-meta">
           <p className="shell-index">
-            Shell 0{shells.findIndex((s) => s.id === active.id) + 1} / 05
+            Design {String(index + 1).padStart(2, "0")} /{" "}
+            {String(allSelectable.length).padStart(2, "0")}
           </p>
           <h3>{active.name}</h3>
           <p className="shell-tagline">{active.tagline}</p>
           <dl>
             <div>
-              <dt>Logo</dt>
+              <dt>Mark</dt>
               <dd>{active.logo}</dd>
             </div>
             <div>
-              <dt>Fit note</dt>
+              <dt>Notes</dt>
               <dd>{active.notes}</dd>
             </div>
           </dl>
@@ -204,6 +220,40 @@ function ShellsSection({
   );
 }
 
+function MoreBoardSection({
+  activeId,
+  onSelect,
+}: {
+  activeId: string;
+  onSelect: (id: string) => void;
+}) {
+  return (
+    <section className="section more-board">
+      <div className="section-head">
+        <h2>More design versions</h2>
+        <p>
+          Combos and patterned faces — same Greek-key aspis outline, different
+          centers and colorways.
+        </p>
+      </div>
+      <div className="more-grid">
+        {moreShields.map((shell) => (
+          <button
+            key={shell.id}
+            className={
+              shell.id === activeId ? "shell-card active" : "shell-card"
+            }
+            onClick={() => onSelect(shell.id)}
+          >
+            <img src={shell.image} alt={shell.name} />
+            <span>{shell.name}</span>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function WornSection({ shell }: { shell: Shell }) {
   return (
     <section className="section worn">
@@ -212,20 +262,20 @@ function WornSection({ shell }: { shell: Shell }) {
           <h2>On court</h2>
           <p>
             Chassis stays black and quiet. The{" "}
-            <em>{shell.name}</em> shell carries the brand — continuous face, no
-            fake gap. Support comes from the inner pad on the tendon.
+            <em>{shell.name}</em> aspis carries the brand — circular shield
+            face, Greek-key rim, solid center. Support comes from the inner pad.
           </p>
           <ul>
             <li>Sits below the kneecap, not around the whole joint</li>
             <li>Thin enough under volleyball kneepads</li>
-            <li>Shells remove for wash or travel without tools</li>
+            <li>Shield shells snap off for wash or a mark swap</li>
           </ul>
         </div>
         <figure className="worn-shot">
           <img
             key={shell.id}
             src={shell.wornImage}
-            alt={`ACHILLES strap worn with ${shell.name} shell on a human knee`}
+            alt={`ACHILLES strap worn with ${shell.name} shield on a human knee`}
           />
         </figure>
       </div>
@@ -239,8 +289,8 @@ function WornGallerySection() {
       <div className="section-head">
         <h2>On a real knee</h2>
         <p>
-          Same chassis, five solid shells — worn below the patella on natural
-          skin. No decorative cutout; the pad does the work from the inside.
+          Circular shield shells worn below the patella on natural skin —
+          helmet, lambda, wreath, labyrinth, pinecone, and patterned faces.
         </p>
       </div>
       <div className="worn-gallery">
@@ -260,7 +310,10 @@ function SystemSection() {
     <section className="section system" id="system">
       <div className="section-head">
         <h2>How the system works</h2>
-        <p>One strap. Five shells. Built for athletes who dress like athletes.</p>
+        <p>
+          One strap. Many aspis faces. Built for athletes who dress like
+          athletes.
+        </p>
       </div>
 
       <ol className="steps">
@@ -277,11 +330,10 @@ function SystemSection() {
         <li>
           <span className="step-num">02</span>
           <div>
-            <h3>Snap the shell</h3>
+            <h3>Snap the shield</h3>
             <p>
-              Align the four posts. Press until you feel the click. The shell is
-              a solid face — the soft silicone pad on the inner liner is what
-              loads the tendon.
+              Align the posts under the circular aspis. Press until you feel the
+              click. The Greek-key rim frames whatever mark you chose.
             </p>
           </div>
         </li>
@@ -290,8 +342,8 @@ function SystemSection() {
           <div>
             <h3>Play · swap · wash</h3>
             <p>
-              Peel the shell after the match. Hand-wash the mesh chassis; wipe
-              shells clean. Next game, different colorway in under ten seconds.
+              Peel the shield after the match. Hand-wash the mesh chassis; wipe
+              shells clean. Next game, different mark in under ten seconds.
             </p>
           </div>
         </li>
@@ -301,15 +353,15 @@ function SystemSection() {
         <div>
           <h3>Materials</h3>
           <p>
-            Mesh band · wicking liner · medical-grade soft silicone pad · TPU
-            snap posts · printed stretch shell face
+            Mesh band · wicking liner · soft silicone pad · TPU snaps · printed
+            circular aspis shell with Greek-key rim
           </p>
         </div>
         <div>
           <h3>Not included</h3>
           <p>
-            Thick neoprene, hinged braces, full-knee wraps, clinical beige
-            everything
+            Thick neoprene, hinged braces, decorative shell cutouts, clinical
+            beige everything
           </p>
         </div>
       </div>
