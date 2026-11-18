@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="ACHILLES — luxury athletic apparel, snow, skate, and performance gear."
+    />
+    <title>ACHILLES</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="icon" href="/images/brand/achilles-crest.png" />
+  </head>
+  <body>
+    <a class="skip" href="#models">Skip to models</a>
+
+    <header class="site-header" data-header>
+      <div class="header-inner">
+        <button class="icon-btn menu-toggle" type="button" aria-expanded="false" aria-controls="drawer-nav" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+
+        <a class="crest-link" href="#home" data-nav="home" aria-label="ACHILLES home">
+          <img class="crest-mark" src="/images/brand/achilles-crest.png" alt="" width="56" height="56" />
+        </a>
+
+        <div class="header-actions">
+          <button class="icon-btn cart-btn" type="button" aria-label="Open cart">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="none" stroke="currentColor" stroke-width="1.5" d="M5 7h14l-1.2 9.2a1.5 1.5 0 0 1-1.5 1.3H7.7a1.5 1.5 0 0 1-1.5-1.3L5 7Zm3.2 0 .6-2.2A1.5 1.5 0 0 1 10.25 3.5h3.5a1.5 1.5 0 0 1 1.45 1.3L15.8 7" />
+            </svg>
+            <span class="cart-count" data-cart-count>0</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <aside class="drawer" id="drawer-nav" aria-hidden="true">
+      <div class="drawer-backdrop" data-close-drawer></div>
+      <nav class="drawer-panel" aria-label="Primary">
+        <div class="drawer-top">
+          <img class="crest-mark lg" src="/images/brand/achilles-crest.png" alt="" width="72" height="72" />
+          <button type="button" class="icon-btn" data-close-drawer aria-label="Close menu">×</button>
+        </div>
+        <a href="#home" data-nav="home">Home</a>
+        <a href="#models" data-nav="models">Models</a>
+        <a href="#category/clothing" data-nav="category" data-category="clothing">Clothing</a>
+        <a href="#category/snow" data-nav="category" data-category="snow">Snow</a>
+        <a href="#category/water" data-nav="category" data-category="water">Water</a>
+        <a href="#category/skate" data-nav="category" data-category="skate">Skate</a>
+        <a href="#category/protection" data-nav="category" data-category="protection">Protection</a>
+        <div class="drawer-ornament" aria-hidden="true">
+          <span class="viii-bar">← VIII →</span>
+        </div>
+      </nav>
+    </aside>
+
+    <main>
+      <!-- HOME -->
+      <section class="view view-home is-active" id="view-home" data-view="home">
+        <section class="hero" aria-label="ACHILLES Collection VIII">
+          <div class="hero-stage" aria-hidden="true">
+            <img
+              class="hero-bg"
+              src="/images/brand/achilles-hero-crest.jpg"
+              alt=""
+              width="1600"
+              height="1200"
+              fetchpriority="high"
+            />
+            <div class="hero-veil"></div>
+          </div>
+
+          <div class="hero-content">
+            <h1 class="sr-only">ACHILLES</h1>
+            <p class="hero-lede">Snow. Skate. Water. Clothing.</p>
+            <a class="pill-cta" href="#models" data-nav="models">Discover more</a>
+          </div>
+          <a class="scroll-cue" href="#models" data-nav="models" aria-label="Scroll to models">
+            <span></span>
+          </a>
+        </section>
+
+        <section class="models" id="models">
+          <div class="models-head">
+            <img class="mini-crest" src="/images/brand/achilles-crest.png" alt="" width="40" height="40" />
+            <p class="eyebrow">Models</p>
+            <h2>Choose your line.</h2>
+            <p class="viii-bar">← VIII →</p>
+          </div>
+
+          <div class="model-stack" id="model-stack"></div>
+        </section>
+
+        <section class="brand-strip">
+          <div class="brand-strip-inner">
+            <div class="symbol-row" aria-hidden="true">
+              <span class="sym eye"></span>
+              <span class="sym a-mark">A</span>
+              <span class="sym pine"></span>
+              <span class="sym laurel"></span>
+              <span class="sym viii">VIII</span>
+            </div>
+            <p>Victory marks the house. Every piece carries the crest.</p>
+          </div>
+        </section>
+      </section>
+
+      <!-- CATEGORY -->
+      <section class="view view-category" id="view-category" data-view="category" hidden>
+        <div class="category-hero">
+          <img class="category-hero-img" data-category-hero alt="" />
+          <div class="category-hero-veil"></div>
+          <div class="category-hero-copy">
+            <button type="button" class="back-link" data-nav="models">← Models</button>
+            <h1 data-category-title></h1>
+            <p data-category-desc></p>
+          </div>
+        </div>
+
+        <div class="category-body">
+          <div class="subnav" data-subnav></div>
+          <div class="product-grid" id="category-grid"></div>
+          <p class="preview-note">Preview catalog — more photos still arriving. Checkout connects to Shopify when you go live.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <img class="footer-crest" src="/images/brand/achilles-crest.png" alt="ACHILLES" width="96" height="96" />
+      <p class="footer-word">ACHILLES</p>
+      <p class="viii-bar">← VIII →</p>
+      <p class="footer-note">Clothing · Snow · Water · Skate · Protection</p>
+    </footer>
+
+    <aside class="cart-drawer" id="cart-drawer" aria-hidden="true">
+      <div class="cart-panel">
+        <div class="cart-top">
+          <h2>Cart</h2>
+          <button type="button" class="icon-btn cart-close" aria-label="Close cart">×</button>
+        </div>
+        <div class="cart-items" data-cart-items></div>
+        <div class="cart-footer">
+          <p class="cart-total">Total <span data-cart-total>$0</span></p>
+          <p class="cart-hint">Preview cart — Shopify checkout connects when you go live.</p>
+        </div>
+      </div>
+    </aside>
+
+    <div class="modal" id="product-modal" aria-hidden="true">
+      <div class="modal-backdrop" data-close-modal></div>
+      <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <button type="button" class="modal-close" data-close-modal aria-label="Close">×</button>
+        <div class="modal-layout">
+          <div class="modal-card-wrap" data-modal-card></div>
+          <div class="modal-buy">
+            <img class="mini-crest" src="/images/brand/achilles-crest.png" alt="" width="36" height="36" />
+            <p class="modal-brand">ACHILLES</p>
+            <h2 id="modal-title"></h2>
+            <p class="modal-price" data-modal-price></p>
+            <p class="modal-desc" data-modal-desc></p>
+            <label class="field"><span>Design</span><select data-modal-design></select></label>
+            <label class="field"><span>Size</span><select data-modal-size></select></label>
+            <label class="field"><span>Quantity</span><input type="number" min="1" max="10" value="1" data-modal-qty /></label>
+            <button type="button" class="pill-cta full" data-add-cart>Add to cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/products.js"></script>
+    <script src="/script.js"></script>
+  </body>
+</html>

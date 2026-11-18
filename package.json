@@ -1,0 +1,10 @@
+{
+  "name": "achilles",
+  "private": true,
+  "version": "2.0.0",
+  "description": "ACHILLES — athletic apparel, boards, and gear shop preview",
+  "scripts": {
+    "start": "python3 -m http.server 4173 --bind 127.0.0.1",
+    "build": "mkdir -p dist && cp index.html styles.css script.js products.js dist/ && cp -R images dist/"
+  }
+}
