@@ -26,6 +26,30 @@ function setUrlSeed(seed: string | null) {
   window.history.replaceState({}, '', url.toString())
 }
 
+function EditionStamp({ mark }: { mark: string }) {
+  return (
+    <aside className="edition-stamp" aria-label={`Edition mark ${mark}`}>
+      <p className="edition-kicker">Official contest rules</p>
+      <p className="edition-body">
+        Winning entries must include the <strong>edition mark</strong> printed
+        here. Paste the riddle alone into a chatbot and you will not earn the
+        seal — the mark never appears inside the riddle text.
+      </p>
+      <p className="edition-format">
+        Enter as: <code>answer {mark}</code>
+      </p>
+      <div className="edition-mark" aria-hidden="true">
+        {mark.split('').map((ch, i) => (
+          <span key={`${ch}-${i}`} className="edition-letter">
+            {ch}
+          </span>
+        ))}
+      </div>
+      <p className="edition-caption">Edition mark</p>
+    </aside>
+  )
+}
+
 export default function App() {
   const initialSeed = useMemo(() => readSeedFromUrl(), [])
   const [view, setView] = useState<View>(initialSeed ? 'challenge' : 'home')
@@ -170,9 +194,8 @@ export default function App() {
             <p className="eyebrow">Sunday contest riddles</p>
             <h1 className="brand-hero">The Loom</h1>
             <p className="lede">
-              Classic think-riddles — the kind you could print in the paper.
-              First person with the right answer gets the seal. That seal is
-              the claim ticket.
+              Think-riddles you could print in the paper — with an edition mark
+              so pasting the question into an AI cannot mint the prize seal.
             </p>
             <div className="cta-row">
               <button type="button" className="btn primary" onClick={() => void onForge()} disabled={busy}>
@@ -195,31 +218,31 @@ export default function App() {
 
       {view === 'home' && (
         <section className="how">
-          <h2>How the contest works</h2>
+          <h2>Why AI alone cannot win</h2>
           <p className="section-lede">
-            No scavenger hunts. No apps to install. Just a riddle worth chewing on.
+            The riddle is fair. The prize ticket is not in the riddle text.
           </p>
           <ol className="steps">
             <li>
-              <strong>You post the riddle</strong>
+              <strong>A think-riddle</strong>
               <span>
-                Share the contest link — a clean question about everyday things,
-                like a Mustang, a kettle, a road.
+                Familiar subjects — Mustangs, kettles, roads. Sit with it. No
+                scavenger hunt.
               </span>
             </li>
             <li>
-              <strong>They think</strong>
+              <strong>An edition mark</strong>
               <span>
-                Anyone can work on it at the kitchen table. Exact wording wins;
-                close guesses do not.
+                Printed only on the contest page rules. It never appears inside
+                the riddle paragraph people paste into chatbots.
               </span>
             </li>
             <li>
-              <strong>The seal is the prize ticket</strong>
+              <strong>The seal</strong>
               <span>
-                The first correct answer mints a <code>LOOM-XXXX-XXXX-XXXX</code>{' '}
-                seal. They show you that code. You check it at the prize desk —
-                so a vague “I know it” or an AI paraphrase cannot cash in.
+                Only <code>answer editionmark</code> mints{' '}
+                <code>LOOM-XXXX-XXXX-XXXX</code>. That code is how someone claims
+                the prize — not a screenshot of ChatGPT.
               </span>
             </li>
           </ol>
@@ -231,8 +254,8 @@ export default function App() {
           <header className="panel-head">
             <h1>Contest desk</h1>
             <p>
-              Publish the riddle link. Keep the seal private — it is your master
-              ticket for whoever claims the prize.
+              Share the contest link (not just the riddle text). Keep the seal
+              private — it is your master ticket for the winner.
             </p>
           </header>
 
@@ -240,6 +263,7 @@ export default function App() {
             <article className="share-card">
               <h2>Riddle to publish</h2>
               <p className="riddle-text">{forged.prompt}</p>
+              <EditionStamp mark={forged.editionMark} />
               <div className="field-block">
                 <label>Contest link</label>
                 <div className="copy-row">
@@ -249,24 +273,37 @@ export default function App() {
                     className="btn small"
                     onClick={() => copyText('link', challengeLink)}
                   >
-                    {copied === 'link' ? 'Copied' : 'Copy'}
+                    {copied === 'link' ? 'Copied' : 'Copy link'}
                   </button>
                 </div>
               </div>
-              <button
-                type="button"
-                className="btn primary"
-                onClick={() => void openChallenge(forged.seed)}
-              >
-                Open as a solver
-              </button>
+              <div className="forge-btn-row">
+                <button
+                  type="button"
+                  className="btn ghost"
+                  onClick={() => copyText('riddle', forged.prompt)}
+                >
+                  {copied === 'riddle' ? 'Copied' : 'Copy riddle only'}
+                </button>
+                <button
+                  type="button"
+                  className="btn primary"
+                  onClick={() => void openChallenge(forged.seed)}
+                >
+                  Open as a solver
+                </button>
+              </div>
+              <p className="fine">
+                “Copy riddle only” deliberately leaves out the edition mark —
+                that is what stops a pasted chatbot prompt from winning.
+              </p>
             </article>
 
             <article className="seal-card">
               <h2>Prize seal</h2>
               <p className="warn">
                 Do not print this next to the riddle. Anyone who brings you this
-                exact code has the winning answer for contest{' '}
+                exact code has the winning entry for contest{' '}
                 <code>{forged.seed}</code>.
               </p>
               <p className="seal-display">{forged.seal}</p>
@@ -298,23 +335,26 @@ export default function App() {
                 <p className="eyebrow">Contest riddle</p>
                 <h1>What’s the answer?</h1>
                 <p>
-                  Sit with it. When you know — type the exact answer. A correct
-                  entry mints your claim seal.
+                  Think it through. Then enter the answer <em>and</em> the
+                  edition mark from the rules on this page.
                 </p>
               </header>
 
               <blockquote className="riddle-block">{challenge.prompt}</blockquote>
 
+              <EditionStamp mark={challenge.editionMark} />
+
               <form className="attempt-form" onSubmit={(e) => void onSubmit(e)}>
-                <label htmlFor="answer">Your answer</label>
+                <label htmlFor="answer">Your entry</label>
                 <p className="format-hint">
-                  One word or a short phrase. Spelling counts.
+                  Format: <code>answer {challenge.editionMark}</code> — riddle
+                  answer, then this page’s edition mark.
                 </p>
                 <input
                   id="answer"
                   value={attempt}
                   onChange={(e) => setAttempt(e.target.value)}
-                  placeholder="e.g. mustang"
+                  placeholder={`e.g. mustang ${challenge.editionMark}`}
                   autoComplete="off"
                   spellCheck={false}
                   disabled={Boolean(wonSeal)}
@@ -334,7 +374,7 @@ export default function App() {
                   <h2>You earned the seal</h2>
                   <p>
                     Show this code to the contest host. It proves you had the
-                    exact answer — without spoiling it in the comments.
+                    full winning entry — riddle plus edition mark.
                   </p>
                   <p className="seal-display">{wonSeal}</p>
                   <button
@@ -421,8 +461,8 @@ export default function App() {
 
       <footer className="footer">
         <p>
-          Newspaper-style riddles. Exact answers. The seal is how the winner
-          proves it — not a screenshot of a chat with an AI.
+          If they only paste the riddle into an AI, they can guess the answer —
+          but they still cannot mint the seal without this page’s edition mark.
         </p>
       </footer>
     </div>

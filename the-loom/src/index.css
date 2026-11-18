@@ -421,6 +421,94 @@ code {
   margin-top: 1.25rem;
 }
 
+.forge-btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-bottom: 0.75rem;
+}
+
+.edition-stamp {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1.1rem 1.2rem 1.25rem;
+  border: 1px solid rgba(201, 120, 58, 0.35);
+  border-radius: 16px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.55), rgba(201, 120, 58, 0.08));
+}
+
+.edition-kicker {
+  margin: 0 0 0.45rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--copper);
+  font-weight: 600;
+}
+
+.edition-body {
+  margin: 0 0 0.75rem;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.edition-format {
+  margin: 0 0 0.9rem;
+  color: var(--ink);
+  font-size: 0.95rem;
+}
+
+.edition-mark {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  justify-content: center;
+  padding: 0.65rem 0.4rem;
+  border-radius: 12px;
+  background: rgba(20, 27, 36, 0.06);
+  user-select: none;
+}
+
+.edition-letter {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 4vw, 1.85rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
+  min-width: 1.35rem;
+  text-align: center;
+  border-bottom: 2px solid rgba(201, 120, 58, 0.55);
+  animation: letter-settle 520ms ease both;
+}
+
+.edition-letter:nth-child(2) { animation-delay: 40ms; }
+.edition-letter:nth-child(3) { animation-delay: 80ms; }
+.edition-letter:nth-child(4) { animation-delay: 120ms; }
+.edition-letter:nth-child(5) { animation-delay: 160ms; }
+.edition-letter:nth-child(6) { animation-delay: 200ms; }
+.edition-letter:nth-child(7) { animation-delay: 240ms; }
+
+.edition-caption {
+  margin: 0.55rem 0 0;
+  text-align: center;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mist);
+}
+
+@keyframes letter-settle {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .lattice-wrap {
   margin: 1.5rem 0 2rem;
 }
