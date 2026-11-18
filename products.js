@@ -1,17 +1,17 @@
 window.ACHILLES_PRODUCTS = [
   {
-    id: "hoodie-leopard",
-    name: "Leopard Hoodie",
+    id: "neon-marble-pant",
+    name: "Neon Marble Pant",
     category: "apparel",
-    price: 128,
+    price: 118,
     roman: "VII",
     badge: "VIII",
     accent: "#c4a35a",
     description:
-      "Heavyweight fleece hoodie with all-over leopard print. Built for cold mornings and post-session warm-ups.",
+      "Baggy street pant in neon marble print. Lookbook cut with ACHILLES back branding.",
     designs: [
-      { id: "front", label: "Front", image: "/images/products/hoodie-leopard-front.jpg", title: "LEOPARD HOODIE — FRONT" },
-      { id: "back", label: "Back", image: "/images/products/hoodie-leopard-back.jpg", title: "LEOPARD HOODIE — BACK" },
+      { id: "back", label: "Back", image: "/images/products/hoodie-leopard-front.jpg", title: "NEON MARBLE PANT — BACK" },
+      { id: "alt", label: "Alt", image: "/images/products/hoodie-leopard-back.jpg", title: "NEON MARBLE PANT — ALT" },
     ],
     sizes: ["S", "M", "L", "XL", "XXL"],
   },
