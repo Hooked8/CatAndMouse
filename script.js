@@ -341,6 +341,29 @@
     cartDrawer.setAttribute("aria-hidden", "true");
   }
 
+  function shopifyReady() {
+    return Boolean(window.AchillesShopify?.isConfigured?.());
+  }
+
+  function updateCheckoutUi() {
+    const hint = document.querySelector("[data-cart-hint]");
+    const btn = document.querySelector("[data-checkout]");
+    if (!hint || !btn) return;
+    if (shopifyReady()) {
+      const url = window.AchillesShopify.permanentShopUrl();
+      hint.innerHTML = `Checkout opens on your permanent Shopify store${
+        url ? ` (<a href="${url}" target="_blank" rel="noopener">${url.replace(/^https?:\/\//, "")}</a>)` : ""
+      }.`;
+      btn.disabled = false;
+      btn.textContent = "Checkout with Shopify";
+    } else {
+      hint.innerHTML =
+        'Add your Shopify store domain + Storefront token in <code>shopify-config.js</code> to enable permanent checkout. See <code>SHOPIFY.md</code>.';
+      btn.disabled = true;
+      btn.textContent = "Connect Shopify to checkout";
+    }
+  }
+
   function renderCart() {
     const mount = document.querySelector("[data-cart-items]");
     const count = document.querySelector("[data-cart-count]");
@@ -349,6 +372,7 @@
     const sum = cart.reduce((acc, line) => acc + line.price * line.qty, 0);
     count.textContent = String(qty);
     total.textContent = money(sum);
+    updateCheckoutUi();
     if (!cart.length) {
       mount.innerHTML = `<p class="cart-empty">Your cart is empty.</p>`;
       return;
@@ -385,8 +409,10 @@
     else {
       cart.push({
         key,
+        handle: activeProduct.id,
         name: activeProduct.name,
         design: design.label,
+        designId: design.id,
         size,
         qty,
         price: activeProduct.price,
@@ -396,6 +422,44 @@
     renderCart();
     closeModal();
     openCart();
+  }
+
+  async function checkoutWithShopify() {
+    const btn = document.querySelector("[data-checkout]");
+    if (!cart.length) return;
+    if (!shopifyReady()) {
+      updateCheckoutUi();
+      openCart();
+      return;
+    }
+    const prev = btn?.textContent;
+    try {
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = "Opening Shopify…";
+      }
+      const url = await window.AchillesShopify.createCheckout(
+        cart.map((line) => ({
+          handle: line.handle,
+          design: line.design,
+          size: line.size,
+          qty: line.qty,
+        }))
+      );
+      window.location.href = url;
+    } catch (err) {
+      console.error(err);
+      const hint = document.querySelector("[data-cart-hint]");
+      if (hint) {
+        hint.textContent =
+          err?.message ||
+          "Shopify checkout failed. Check shopify-config.js and that products were imported.";
+      }
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = prev || "Checkout with Shopify";
+      }
+    }
   }
 
   /* Events */
@@ -411,6 +475,9 @@
 
   document.querySelector(".cart-btn")?.addEventListener("click", openCart);
   document.querySelector(".cart-close")?.addEventListener("click", closeCart);
+  document.querySelector("[data-checkout]")?.addEventListener("click", () => {
+    checkoutWithShopify();
+  });
   cartDrawer?.addEventListener("click", (e) => {
     if (e.target === cartDrawer) closeCart();
   });
@@ -483,5 +550,6 @@
 
   renderModels();
   renderCart();
+  updateCheckoutUi();
   applyRoute();
 })();
