@@ -1,25 +1,18 @@
 # The Loom
 
-A riddle machine that forges **AI-resistant sealed challenges**.
+Newspaper-style contest riddles — think-about-it questions with one exact answer.
 
-## The lock
+## Contest flow
 
-Each challenge has two secrets:
+1. **Post a contest riddle** — get a share link and a private prize seal.
+2. Solvers enter the exact answer and mint a `LOOM-…` claim seal.
+3. Check claims at the **Prize desk**.
 
-1. **The riddle** — a fair lateral puzzle with one precise answer.
-2. **The filament** — an instance-specific word spelled by a copper thread in a letter lattice on that page. It never appears in the riddle text.
-
-Only the binding `answer filament` mints a seal (`LOOM-XXXX-XXXX-XXXX`). Solvers show the host the seal; near-misses and “ask ChatGPT the riddle” attempts cannot mint it.
+No scavenger hunts. Just a riddle worth chewing on.
 
 ## Develop
 
 ```bash
 npm install
 npm run dev
-```
-
-## Build
-
-```bash
-npm run build
 ```

@@ -1,12 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
-import { FilamentLattice } from './components/FilamentLattice'
 import { HeroThreads } from './components/HeroThreads'
 import {
   challengeFromSeed,
   findSealInLedger,
   forgeChallenge,
   loadLedger,
-  matchesChallengeAnswer,
   saveLedgerEntry,
   verifyAttempt,
   type ForgedChallenge,
@@ -39,7 +37,6 @@ export default function App() {
   const [wonSeal, setWonSeal] = useState<string | null>(null)
   const [tries, setTries] = useState(0)
   const [showNudge, setShowNudge] = useState(false)
-  const [emphasizeThread, setEmphasizeThread] = useState(false)
   const [ledger, setLedger] = useState<HostLedgerEntry[]>(() => loadLedger())
   const [verifyInput, setVerifyInput] = useState('')
   const [verifyResult, setVerifyResult] = useState<string | null>(null)
@@ -55,7 +52,7 @@ export default function App() {
       if (!cancelled) {
         setChallenge(ch)
         setBusy(false)
-        if (!ch) setFeedback('This loom seed is malformed.')
+        if (!ch) setFeedback('This contest link is invalid.')
       }
     })()
     return () => {
@@ -92,7 +89,6 @@ export default function App() {
     setFeedback(null)
     setTries(0)
     setShowNudge(false)
-    setEmphasizeThread(false)
     const ch = await challengeFromSeed(seed)
     setChallenge(ch)
     setUrlSeed(seed)
@@ -107,24 +103,11 @@ export default function App() {
     const result = await verifyAttempt(challenge, attempt)
     if (result.ok) {
       setWonSeal(result.seal)
-      setFeedback(null)
-      setEmphasizeThread(true)
       return
     }
     const next = tries + 1
     setTries(next)
-    if (next >= 2) setEmphasizeThread(true)
     if (next >= 3) setShowNudge(true)
-
-    const tokens = attempt.trim().split(/\s+/)
-    const maybeAnswer =
-      tokens.length === 1 ? tokens[0]! : tokens.slice(0, -1).join(' ')
-    if (maybeAnswer && (await matchesChallengeAnswer(challenge, maybeAnswer))) {
-      setFeedback(
-        'That may be the riddle — but a riddle alone cannot mint a seal. Find the filament.',
-      )
-      return
-    }
     setFeedback(result.reason)
   }
 
@@ -165,7 +148,7 @@ export default function App() {
             onClick={() => void onForge()}
             disabled={busy}
           >
-            Forge
+            New contest
           </button>
           <button
             type="button"
@@ -175,7 +158,7 @@ export default function App() {
               setView('ledger')
             }}
           >
-            Host ledger
+            Prize desk
           </button>
         </nav>
       </header>
@@ -184,15 +167,16 @@ export default function App() {
         <main className="hero">
           <HeroThreads />
           <div className="hero-copy">
-            <p className="eyebrow">Riddle machine</p>
+            <p className="eyebrow">Sunday contest riddles</p>
             <h1 className="brand-hero">The Loom</h1>
             <p className="lede">
-              Forges mind-teasing riddles sealed with a second secret woven into
-              the page — so pasting the question into an AI cannot mint the key.
+              Classic think-riddles — the kind you could print in the paper.
+              First person with the right answer gets the seal. That seal is
+              the claim ticket.
             </p>
             <div className="cta-row">
               <button type="button" className="btn primary" onClick={() => void onForge()} disabled={busy}>
-                {busy ? 'Spinning…' : 'Forge a sealed riddle'}
+                {busy ? 'Printing…' : 'Post a contest riddle'}
               </button>
               <button
                 type="button"
@@ -202,7 +186,7 @@ export default function App() {
                   setView('ledger')
                 }}
               >
-                Verify a seal
+                Check a claim seal
               </button>
             </div>
           </div>
@@ -211,30 +195,31 @@ export default function App() {
 
       {view === 'home' && (
         <section className="how">
-          <h2>How the lock works</h2>
+          <h2>How the contest works</h2>
           <p className="section-lede">
-            One question. Two secrets. One proof.
+            No scavenger hunts. No apps to install. Just a riddle worth chewing on.
           </p>
           <ol className="steps">
             <li>
-              <strong>The riddle</strong>
+              <strong>You post the riddle</strong>
               <span>
-                A fair lateral puzzle that feels solvable — precise answer required.
+                Share the contest link — a clean question about everyday things,
+                like a Mustang, a kettle, a road.
               </span>
             </li>
             <li>
-              <strong>The filament</strong>
+              <strong>They think</strong>
               <span>
-                An instance-specific word spelled by a copper thread in the letter
-                lattice. It never appears in the riddle text you might paste elsewhere.
+                Anyone can work on it at the kitchen table. Exact wording wins;
+                close guesses do not.
               </span>
             </li>
             <li>
-              <strong>The seal</strong>
+              <strong>The seal is the prize ticket</strong>
               <span>
-                Only the correct binding — answer plus filament — mints a{' '}
-                <code>LOOM-XXXX-XXXX-XXXX</code> key. Solvers show you the seal; you
-                check it in your host ledger. Near-misses and AI paraphrases fail.
+                The first correct answer mints a <code>LOOM-XXXX-XXXX-XXXX</code>{' '}
+                seal. They show you that code. You check it at the prize desk —
+                so a vague “I know it” or an AI paraphrase cannot cash in.
               </span>
             </li>
           </ol>
@@ -244,19 +229,19 @@ export default function App() {
       {view === 'forge' && forged && (
         <main className="panel forge-panel">
           <header className="panel-head">
-            <h1>Host forge</h1>
+            <h1>Contest desk</h1>
             <p>
-              Share the challenge link. Keep the seal private — it is your proof
-              key when someone claims they solved it.
+              Publish the riddle link. Keep the seal private — it is your master
+              ticket for whoever claims the prize.
             </p>
           </header>
 
           <div className="forge-grid">
             <article className="share-card">
-              <h2>Challenge to share</h2>
+              <h2>Riddle to publish</h2>
               <p className="riddle-text">{forged.prompt}</p>
               <div className="field-block">
-                <label>Share link</label>
+                <label>Contest link</label>
                 <div className="copy-row">
                   <code>{challengeLink}</code>
                   <button
@@ -273,15 +258,16 @@ export default function App() {
                 className="btn primary"
                 onClick={() => void openChallenge(forged.seed)}
               >
-                Open as solver
+                Open as a solver
               </button>
             </article>
 
             <article className="seal-card">
-              <h2>Host seal</h2>
+              <h2>Prize seal</h2>
               <p className="warn">
-                Do not post this with the riddle. Anyone who shows you this exact
-                code has bound both secrets for seed <code>{forged.seed}</code>.
+                Do not print this next to the riddle. Anyone who brings you this
+                exact code has the winning answer for contest{' '}
+                <code>{forged.seed}</code>.
               </p>
               <p className="seal-display">{forged.seal}</p>
               <button
@@ -291,16 +277,13 @@ export default function App() {
               >
                 {copied === 'seal' ? 'Copied' : 'Copy seal'}
               </button>
-              <p className="fine">
-                Saved to your host ledger in this browser. Difficulty:{' '}
-                <em>{forged.difficulty}</em>
-              </p>
+              <p className="fine">Saved to your prize desk in this browser.</p>
             </article>
           </div>
 
           <div className="forge-actions">
             <button type="button" className="btn ghost" onClick={() => void onForge()} disabled={busy}>
-              Forge another
+              Draw another riddle
             </button>
           </div>
         </main>
@@ -308,57 +291,50 @@ export default function App() {
 
       {view === 'challenge' && (
         <main className="panel challenge-panel">
-          {busy && !challenge && <p className="loading">Threading the loom…</p>}
+          {busy && !challenge && <p className="loading">Setting the type…</p>}
           {challenge && (
             <>
               <header className="panel-head">
-                <p className="eyebrow">Sealed challenge · {challenge.difficulty}</p>
-                <h1>Untie the binding</h1>
+                <p className="eyebrow">Contest riddle</p>
+                <h1>What’s the answer?</h1>
+                <p>
+                  Sit with it. When you know — type the exact answer. A correct
+                  entry mints your claim seal.
+                </p>
               </header>
 
               <blockquote className="riddle-block">{challenge.prompt}</blockquote>
 
-              <FilamentLattice
-                size={challenge.lattice.size}
-                cells={challenge.lattice.cells}
-                path={challenge.lattice.path}
-                emphasize={emphasizeThread}
-                revealed={Boolean(wonSeal)}
-              />
-
               <form className="attempt-form" onSubmit={(e) => void onSubmit(e)}>
-                <label htmlFor="binding">Your binding</label>
+                <label htmlFor="answer">Your answer</label>
                 <p className="format-hint">
-                  Format: <code>answer filament</code> — the riddle’s answer, then
-                  the word the thread spells.
+                  One word or a short phrase. Spelling counts.
                 </p>
                 <input
-                  id="binding"
+                  id="answer"
                   value={attempt}
                   onChange={(e) => setAttempt(e.target.value)}
-                  placeholder="e.g. shadow ember"
+                  placeholder="e.g. mustang"
                   autoComplete="off"
                   spellCheck={false}
                   disabled={Boolean(wonSeal)}
                 />
                 {!wonSeal && (
                   <button type="submit" className="btn primary" disabled={!attempt.trim()}>
-                    Mint the seal
+                    Submit for the seal
                   </button>
                 )}
               </form>
 
               {feedback && <p className="feedback">{feedback}</p>}
-              {showNudge && !wonSeal && (
-                <p className="nudge">{challenge.nudge}</p>
-              )}
+              {showNudge && !wonSeal && <p className="nudge">{challenge.nudge}</p>}
 
               {wonSeal && (
                 <div className="victory">
-                  <h2>Seal minted</h2>
+                  <h2>You earned the seal</h2>
                   <p>
-                    Show this code to the host. It proves you bound both secrets
-                    for this loom — without spoiling the answer in chat.
+                    Show this code to the contest host. It proves you had the
+                    exact answer — without spoiling it in the comments.
                   </p>
                   <p className="seal-display">{wonSeal}</p>
                   <button
@@ -378,10 +354,10 @@ export default function App() {
       {view === 'ledger' && (
         <main className="panel ledger-panel">
           <header className="panel-head">
-            <h1>Host ledger</h1>
+            <h1>Prize desk</h1>
             <p>
-              Paste a seal someone claims. If it matches a riddle you forged in
-              this browser, the claim holds.
+              Someone claims they solved it? Paste their seal. If it matches a
+              contest you posted in this browser, the claim is good.
             </p>
           </header>
 
@@ -392,11 +368,11 @@ export default function App() {
               const hit = findSealInLedger(verifyInput)
               if (hit) {
                 setVerifyResult(
-                  `Valid — forged ${new Date(hit.createdAt).toLocaleString('en-US', { timeZone: 'America/Denver' })} MT · seed ${hit.seed} · ${hit.riddleId}`,
+                  `Valid claim — posted ${new Date(hit.createdAt).toLocaleString('en-US', { timeZone: 'America/Denver' })} MT · contest ${hit.seed}`,
                 )
               } else {
                 setVerifyResult(
-                  'No match in this browser’s ledger. Either the seal is wrong, or it was forged on another device.',
+                  'No match on this prize desk. Wrong seal, or the contest was forged on another device.',
                 )
               }
             }}
@@ -410,14 +386,14 @@ export default function App() {
               spellCheck={false}
             />
             <button type="submit" className="btn primary">
-              Verify
+              Verify claim
             </button>
           </form>
           {verifyResult && <p className="feedback">{verifyResult}</p>}
 
-          <h2 className="subhead">Your forged seals</h2>
+          <h2 className="subhead">Your posted contests</h2>
           {ledger.length === 0 ? (
-            <p className="empty">No seals yet. Forge a riddle to begin.</p>
+            <p className="empty">No contests yet. Post a riddle to begin.</p>
           ) : (
             <ul className="ledger-list">
               {ledger.map((entry) => (
@@ -427,7 +403,14 @@ export default function App() {
                     {new Date(entry.createdAt).toLocaleString('en-US', {
                       timeZone: 'America/Denver',
                     })}{' '}
-                    MT · <button type="button" className="linkish" onClick={() => void openChallenge(entry.seed)}>open</button>
+                    MT ·{' '}
+                    <button
+                      type="button"
+                      className="linkish"
+                      onClick={() => void openChallenge(entry.seed)}
+                    >
+                      open
+                    </button>
                   </span>
                 </li>
               ))}
@@ -438,8 +421,8 @@ export default function App() {
 
       <footer className="footer">
         <p>
-          The Loom never puts the filament inside the riddle text. AI that only
-          sees the question cannot mint a seal.
+          Newspaper-style riddles. Exact answers. The seal is how the winner
+          proves it — not a screenshot of a chat with an AI.
         </p>
       </footer>
     </div>
