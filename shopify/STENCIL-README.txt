@@ -1,16 +1,7 @@
-ACHILLES VIII spray stencil (reinforced)
-=======================================
+ACHILLES spray stencil = your logo STL + working QR
 URL: https://cjz63c-nh.myshopify.com
-Optical decode: https://cjz63c-nh.myshopify.com
-Spray-sim decode: https://cjz63c-nh.myshopify.com
-
-Files
-- achilles-spray-stencil.svg
-- achilles-spray-stencil.stl
-- achillesviiistencil.stl  (same STL, reference name)
-- achilles-spray-stencil-preview.png
-
-Logo: clean geometric Lambda/A + laurel + ACHILLES + VIII (not photo threshold)
-QR: thicker cross bridges (1.25 mm) + extra supports every 7 modules
-Sheet: 147.0 x 286.1 x 1.6 mm
-Material fill: 81.5%
+Optical+spray decode: https://cjz63c-nh.myshopify.com
+Sheet: 170.0 x 362.7 x 1.0 mm
+Logo source: achilles-logo-stencil-source.stl
+QR bridges: 58 @ 1.25 mm
+Files: achillesviiistencil.stl, achilles-spray-stencil.stl, achilles-spray-stencil.svg
