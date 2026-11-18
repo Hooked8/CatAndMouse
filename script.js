@@ -195,6 +195,13 @@
     sizeSelect.innerHTML = product.sizes
       .map((s) => `<option value="${s}">${s}</option>`)
       .join("");
+    const sizeLabel = sizeSelect.closest("label")?.querySelector("span");
+    if (sizeLabel) {
+      const boardSubs = new Set(["wakeboards", "surfboards", "snowboards", "skis"]);
+      sizeLabel.textContent = boardSubs.has(product.sub)
+        ? "Size (Roman · cm)"
+        : "Size";
+    }
     modal.querySelector("[data-modal-qty]").value = "1";
     updateModalCard();
     modal.setAttribute("aria-hidden", "false");
