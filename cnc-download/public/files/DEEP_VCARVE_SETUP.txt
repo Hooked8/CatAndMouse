@@ -1,0 +1,36 @@
+ACHILLES 8.5" Skate Deck — Deep V-Carve Setup
+================================================
+Board width: 8.5 inches (exact)
+Board length: 32 inches
+Machine: Utah Tech CAMaster Stinger III
+CAM: Autodesk Fusion 360 (recommended) or VCarve Pro
+Controller post: WinCNC / CAMaster WinCNC
+
+FILES TO IMPORT
+- ACHILLES_8.5in_DeepVCarve_Stinger_Fusion360.svg  (PRIMARY)
+- ACHILLES_8.5in_DeepVCarve_Stinger_Fusion360.dxf  (backup)
+
+TOOL
+- 60° V-bit preferred (deeper for a given line width)
+- 90° V-bit also OK
+
+DEPTH (deep carve like your reference photos)
+- Flat depth limit: 0.125" to 0.1875" (1/8"–3/16")
+- Start with 0.125" on scrap, then 0.156"–0.1875" for the final look
+- Crest + pattern both use thick strokes designed for deep V-carve
+
+FUSION STEPS
+1. New Design, units = inches
+2. Insert / Open the SVG (scale 1:1 inch)
+3. Manufacture workspace
+4. New Setup: stock 8.5 x 32 x deck thickness; origin at corner or center per shop habit
+5. 2D Engrave or Trace+Vcarve-style operation on center-crest and all-over-pattern
+6. Select 60° V-bit, set max depth 0.15" (adjust with staff)
+7. Simulate, then post to WinCNC
+8. Cut scrap maple tile of crest BEFORE full deck
+
+HOLD-DOWN
+- Clamp/screw outside final deck outline into spoilboard, or vacuum if available
+
+CONTACT
+makerspace@utahtech.edu | 435-879-4532

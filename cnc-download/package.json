@@ -1,0 +1,14 @@
+{
+  "name": "achilles-cnc-download",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5180",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 5180"
+  },
+  "devDependencies": {
+    "vite": "^6.3.3"
+  }
+}
