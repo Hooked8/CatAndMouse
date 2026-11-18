@@ -45,21 +45,17 @@ export function FilamentLattice({ size, cells, path, emphasize, revealed }: Prop
   const polyline = pathPoints.map((p) => `${p.x},${p.y}`).join(' ')
 
   useEffect(() => {
-    if (!tracing && !emphasize) {
-      setProgress(0.22)
-      return
-    }
+    // Always draw the full path so humans can trace it; interaction only brightens.
     let frame = 0
     let raf = 0
     const tick = () => {
       frame += 1
-      const target = emphasize || tracing ? 1 : 0.35
-      setProgress((p) => Math.min(target, p + 0.012))
-      if (frame < 120) raf = requestAnimationFrame(tick)
+      setProgress((p) => Math.min(1, p + 0.02))
+      if (frame < 80) raf = requestAnimationFrame(tick)
     }
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
-  }, [tracing, emphasize])
+  }, [])
 
   const dash = useMemo(() => {
     let len = 0
@@ -136,13 +132,13 @@ export function FilamentLattice({ size, cells, path, emphasize, revealed }: Prop
           points={polyline}
           fill="none"
           stroke="url(#threadGrad)"
-          strokeWidth={emphasize || tracing || revealed ? 3.2 : 2.1}
+          strokeWidth={emphasize || tracing || revealed ? 3.4 : 2.4}
           strokeLinecap="round"
           strokeLinejoin="round"
           filter="url(#softGlow)"
           strokeDasharray={dash}
           strokeDashoffset={dash * (1 - progress)}
-          opacity={revealed ? 1 : emphasize ? 0.95 : 0.72}
+          opacity={revealed || tracing || emphasize ? 1 : 0.82}
           className="lattice-thread"
         />
 
@@ -150,11 +146,11 @@ export function FilamentLattice({ size, cells, path, emphasize, revealed }: Prop
           <circle
             cx={pathPoints[0].x}
             cy={pathPoints[0].y}
-            r={4.5}
+            r={5}
             className="lattice-node start"
           />
         )}
-        {pathPoints[pathPoints.length - 1] && progress > 0.85 && (
+        {pathPoints[pathPoints.length - 1] && progress > 0.9 && (
           <circle
             cx={pathPoints[pathPoints.length - 1]!.x}
             cy={pathPoints[pathPoints.length - 1]!.y}
